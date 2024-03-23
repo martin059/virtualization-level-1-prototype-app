@@ -1,0 +1,949 @@
+{
+	"info": {
+		"_postman_id": "099e444d-44ad-4ab8-bf2f-4663fcbeb3d2",
+		"name": "Python API Testing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17441187"
+	},
+	"item": [
+		{
+			"name": "Unit Testing",
+			"item": [
+				{
+					"name": "UT_TEMPLATES",
+					"item": [
+						{
+							"name": "TEMPLATE Test Response",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Validate that the response code should be 200",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Validate that the response is json object",
+											"pm.test(\"Response is a json object\", function () {",
+											"    pm.expect(pm.response.json()).to.be.an('object');",
+											"});",
+											"",
+											"// Validate that the response has an arg object",
+											"pm.test(\"Response to have 'arg' object\", function () {",
+											"    pm.expect(pm.response.json()).to.have.property('args');",
+											"});",
+											"",
+											"// Validate that the response has headers object",
+											"pm.test(\"Response to have 'headers' object\", function () {",
+											"    pm.expect(pm.response.json()).to.have.property('headers');",
+											"});",
+											"",
+											"// Validate that the response has url property",
+											"pm.test(\"Response to have 'url' property\", function () {",
+											"    pm.expect(pm.response.json()).to.have.property('url');",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://postman-echo.com/get?foo1=bar1&foo2=bar2",
+									"protocol": "https",
+									"host": [
+										"postman-echo",
+										"com"
+									],
+									"path": [
+										"get"
+									],
+									"query": [
+										{
+											"key": "foo1",
+											"value": "bar1"
+										},
+										{
+											"key": "foo2",
+											"value": "bar2"
+										}
+									]
+								},
+								"description": "The tests in this request validate that:\n\n- the response code is 200\n- the response is a JSON object\n- the response has an 'arg' object\n- the response has 'headers' object\n- the response has a 'URL' property"
+							},
+							"response": []
+						},
+						{
+							"name": "Check for Valid Query Params",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Validate that the response code should be 200\r",
+											"pm.test(\"Response Code should be 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"// Run validations on response headers like Content-Type\r",
+											"pm.test(\"Content-Type should be JSON\", function () {\r",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json; charset=utf-8');\r",
+											"});\r",
+											"\r",
+											"const json = pm.response.json();\r",
+											"\r",
+											"// The response body, including individual attributes can be evaluated for correctness\r",
+											"pm.test(\"`args` should contain the correct query params\", function () {\r",
+											"    pm.expect(json.args).to.be.an('object');\r",
+											"    pm.expect(json.args.foo).to.eql('bar');\r",
+											"    pm.expect(json.args.baz).to.eql('value');\r",
+											"});\r",
+											"\r",
+											"// Non-trivial data types like Dates can also be tested against\r",
+											"pm.test(\"Date in the header should be valid\", function () {\r",
+											"    const parsedDate = new Date(pm.response.headers.get('Date'));\r",
+											"    pm.expect(parsedDate).to.be.a('date');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/get?foo=bar&baz=value",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"get"
+									],
+									"query": [
+										{
+											"key": "foo",
+											"value": "bar"
+										},
+										{
+											"key": "baz",
+											"value": "value"
+										}
+									]
+								},
+								"description": "The tests in the request validate the response code and the data returned in the response is the same as the one being sent."
+							},
+							"response": []
+						},
+						{
+							"name": "Check for Valid Form Data",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const json = pm.response.json();\r",
+											"\r",
+											"// Validate raw body sent in the request, be it form-data or JSON\r",
+											"pm.test(\"`form` should contain the correct form data\", function () {\r",
+											"    pm.expect(json.form).to.be.an('object');\r",
+											"    pm.expect(json.form.foo1).to.eql('bar1');\r",
+											"    pm.expect(json.form.foo2).to.eql('bar2');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "foo1",
+											"value": "bar1",
+											"type": "text"
+										},
+										{
+											"key": "foo2",
+											"value": "bar2",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/post",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"post"
+									]
+								},
+								"description": "The tests in this request validate that the request body sent as form-data is valid."
+							},
+							"response": []
+						}
+					],
+					"description": "Templates gotten from Postman API testing sample collection"
+				},
+				{
+					"name": "Test Hello World",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Validate that the response code should be 200",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Validate that the response is raw text",
+									"pm.test(\"Response is a raw text\", function () {",
+									"    pm.expect(pm.response.text());",
+									"});",
+									"",
+									"// Validate that the response says 'Hello World'",
+									"pm.test(\"Response has 'Hello World'\", function () {",
+									"    pm.expect(pm.response.text()).contains('Hello World');",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								""
+							]
+						},
+						"description": "The tests in this request validate that:\n\n- the response code is 200\n- the response is a JSON object\n- the response has an 'arg' object\n- the response has 'headers' object\n- the response has a 'URL' property"
+					},
+					"response": []
+				},
+				{
+					"name": "Test List All Programming",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Validate that the response code should be 200",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Validate that the response is json object",
+									"pm.test(\"Response is a json object\", function () {",
+									"    pm.expect(pm.response.json()).to.be.an('object');",
+									"});",
+									"",
+									"// Validate that the response has an pogramming_languages object",
+									"pm.test(\"Response to have 'programming_languages' object\", function () {",
+									"    pm.expect(pm.response.json()).to.have.property('programming_languages');",
+									"});",
+									"",
+									"// Validate that the response's pogramming_languages object has 3 child-elements",
+									"pm.test(\"Response to have 3 child-elements\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.programming_languages.length).to.gte(3);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/programming_languages",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"programming_languages"
+							]
+						},
+						"description": "The tests in this request validate that:\n\n- the response code is 200\n- the response is a JSON object\n- the response has an 'arg' object\n- the response has 'headers' object\n- the response has a 'URL' property"
+					},
+					"response": []
+				},
+				{
+					"name": "Test One Programming",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Validate that the response code should be 200",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Validate that the response is json object",
+									"pm.test(\"Response is a json object\", function () {",
+									"    pm.expect(pm.response.json()).to.be.an('object');",
+									"});",
+									"",
+									"// Validate that the response does not have an pogramming_languages object",
+									"pm.test(\"Response to NOT have 'programming_languages' object\", function () {",
+									"    pm.expect(pm.response.json()).to.not.have.property('programming_languages');",
+									"});",
+									"",
+									"// Validate that the response's has the expected publication_year",
+									"pm.test(\"Response to have the expected publication_year\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.publication_year).eq(1960)",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/programming_languages/COBOL",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"programming_languages",
+								"COBOL"
+							]
+						},
+						"description": "The tests in this request validate that:\n\n- the response code is 200\n- the response is a JSON object\n- the response has an 'arg' object\n- the response has 'headers' object\n- the response has a 'URL' property"
+					},
+					"response": []
+				},
+				{
+					"name": "Test Add One Programming",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Validate that the response code should be 200",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Validate that the response is json object",
+									"pm.test(\"Response is a json object\", function () {",
+									"    pm.expect(pm.response.json()).to.be.an('object');",
+									"});",
+									"",
+									"// Validate that the response does not have an pogramming_languages object",
+									"pm.test(\"Response to NOT have 'programming_languages' object\", function () {",
+									"    pm.expect(pm.response.json()).to.not.have.property('programming_languages');",
+									"});",
+									"",
+									"// Validate that the response's has the expected publication_year",
+									"pm.test(\"Response to have the expected publication_year\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.publication_year).eq(1995)",
+									"    pm.expect(jsonData.contribution).eq('Object-oriented programming language.')",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\": \"Java\", \"publication_year\": 1995, \"contribution\": \"Object-oriented programming language.\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/programming_languages",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"programming_languages"
+							]
+						},
+						"description": "The tests in this request validate that:\n\n- the response code is 200\n- the response is a JSON object\n- the response has an 'arg' object\n- the response has 'headers' object\n- the response has a 'URL' property"
+					},
+					"response": []
+				},
+				{
+					"name": "Test Update One Programming",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Validate that the response code should be 200",
+									"pm.test(\"Status should be 200, it isn't see if 'Java' has been defined in previous test\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Validate that the response is json object",
+									"pm.test(\"Response is a json object\", function () {",
+									"    pm.expect(pm.response.json()).to.be.an('object');",
+									"});",
+									"",
+									"// Validate that the response does not have an pogramming_languages object",
+									"pm.test(\"Response to NOT have 'programming_languages' object\", function () {",
+									"    pm.expect(pm.response.json()).to.not.have.property('programming_languages');",
+									"});",
+									"",
+									"// Validate that the response's has the expected publication_year",
+									"pm.test(\"Response to have the expected publication_year\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.contribution).eq('the JVM')",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\": \"Java\", \"publication_year\": 1995, \"contribution\": \"the JVM\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/programming_languages/Java",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"programming_languages",
+								"Java"
+							]
+						},
+						"description": "The tests in this request validate that:\n\n- the response code is 200\n- the response is a JSON object\n- the response has an 'arg' object\n- the response has 'headers' object\n- the response has a 'URL' property"
+					},
+					"response": []
+				},
+				{
+					"name": "Test Delete One Programming",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Validate that the response code should be 200",
+									"pm.test(\"Status should be 200, it isn't see if 'Java' has been defined in previous test\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Validate that the response is json object",
+									"pm.test(\"Response is a json object\", function () {",
+									"    pm.expect(pm.response.json()).to.be.an('object');",
+									"});",
+									"",
+									"// Validate that the response does not have an pogramming_languages object",
+									"pm.test(\"Response to NOT have 'programming_languages' object\", function () {",
+									"    pm.expect(pm.response.json()).to.not.have.property('programming_languages');",
+									"});",
+									"",
+									"// Validate that the response's has the expected publication_year",
+									"pm.test(\"Response to have the expected publication_year\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.publication_year).eq(1995)",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/programming_languages/Java",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"programming_languages",
+								"Java"
+							]
+						},
+						"description": "The tests in this request validate that:\n\n- the response code is 200\n- the response is a JSON object\n- the response has an 'arg' object\n- the response has 'headers' object\n- the response has a 'URL' property"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Task Operations",
+			"item": [
+				{
+					"name": "Test Get Tasks from DB",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Validate that the response code should be 200",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Validate that the response is json object",
+									"pm.test(\"Response is a json object\", function () {",
+									"    pm.expect(pm.response).to.be.an('object');",
+									"});",
+									"",
+									"// Validate that the response has more than 1 task",
+									"pm.test(\"Response is a json object with one child only\", function () {",
+									"    // Get the keys of the response object",
+									"    var keys = Object.keys(pm.response.json());",
+									"    // Check if the number of keys greater than 1",
+									"    pm.expect(keys.length).to.gt(1);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/tasks",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tasks"
+							]
+						},
+						"description": "The tests in this request validate that:\n\n- the response code is 200\n- the response is a JSON object\n- the response has an 'arg' object\n- the response has 'headers' object\n- the response has a 'URL' property"
+					},
+					"response": []
+				},
+				{
+					"name": "Test Get one Task from DB",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Validate that the response code should be 200",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Validate that the response is json object",
+									"pm.test(\"Response is a json object\", function () {",
+									"    pm.expect(pm.response).to.be.an('object');",
+									"});",
+									"",
+									"pm.test(\"Response is a json object with one child only\", function () {",
+									"    // Get the keys of the response object",
+									"    var keys = Object.keys(pm.response.json());",
+									"    // Check if the number of keys is equal to 1",
+									"    pm.expect(keys.length).to.equal(1);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/tasks/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tasks",
+								"1"
+							]
+						},
+						"description": "The tests in this request validate that:\n\n- the response code is 200\n- the response is a JSON object\n- the response has an 'arg' object\n- the response has 'headers' object\n- the response has a 'URL' property"
+					},
+					"response": []
+				},
+				{
+					"name": "Test Get a Task due dates from DB",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Validate that the response code should be 200",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Validate that the response is json object",
+									"pm.test(\"Response is a json object\", function () {",
+									"    pm.expect(pm.response).to.be.an('object');",
+									"});",
+									"",
+									"pm.test(\"Response is a json object with one child or more\", function () {",
+									"    // Get the keys of the response object",
+									"    var keys = Object.keys(pm.response.json());",
+									"    // Check if the number of keys is greater or equal to 1",
+									"    pm.expect(keys.length).to.gte(1);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/tasks/5/due-by",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tasks",
+								"5",
+								"due-by"
+							]
+						},
+						"description": "The tests in this request validate that:\n\n- the response code is 200\n- the response is a JSON object\n- the response has an 'arg' object\n- the response has 'headers' object\n- the response has a 'URL' property"
+					},
+					"response": []
+				},
+				{
+					"name": "Test Get unexistent Task due dates from DB",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Validate that the response code should be 200",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Validate that the response is json object",
+									"pm.test(\"Response is a json object\", function () {",
+									"    pm.expect(pm.response).to.be.an('object');",
+									"});",
+									"",
+									"// Validate that the response is an empty json object",
+									"pm.test(\"Response is an empty JSON object\", function () {",
+									"    pm.response.to.have.jsonBody({});",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/tasks/-1/due-by",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tasks",
+								"-1",
+								"due-by"
+							]
+						},
+						"description": "The tests in this request validate that:\n\n- the response code is 200\n- the response is a JSON object\n- the response has an 'arg' object\n- the response has 'headers' object\n- the response has a 'URL' property"
+					},
+					"response": []
+				},
+				{
+					"name": "Test KO GET a Task due dates from DB",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Validate that the response code should be 400",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/tasks/aa/due-by",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tasks",
+								"aa",
+								"due-by"
+							]
+						},
+						"description": "The tests in this request validate that:\n\n- the response code is 200\n- the response is a JSON object\n- the response has an 'arg' object\n- the response has 'headers' object\n- the response has a 'URL' property"
+					},
+					"response": []
+				},
+				{
+					"name": "Test KO Get one Task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Validate that the response code should be 400",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/tasks/czczx",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tasks",
+								"czczx"
+							]
+						},
+						"description": "The tests in this request validate that:\n\n- the response code is 200\n- the response is a JSON object\n- the response has an 'arg' object\n- the response has 'headers' object\n- the response has a 'URL' property"
+					},
+					"response": []
+				},
+				{
+					"name": "Test KO Post new Task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Validate that the response code should be 400",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/tasks",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tasks"
+							]
+						},
+						"description": "The tests in this request validate that:\n\n- the response code is 200\n- the response is a JSON object\n- the response has an 'arg' object\n- the response has 'headers' object\n- the response has a 'URL' property"
+					},
+					"response": []
+				},
+				{
+					"name": "Test Post new Task to DB",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Validate that the response code should be 201",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"// Validate that the response is json object",
+									"pm.test(\"Response is a json object\", function () {",
+									"    pm.expect(pm.response.json()).to.be.an('object');",
+									"});",
+									"",
+									"// Validate that the response has an 'new_task_id' object",
+									"pm.test(\"Response to have 'new_task_id' object\", function () {",
+									"    pm.expect(pm.response.json()).to.have.property('new_task_id');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"task_name\":\"Task REST\",\r\n    \"task_descrip\":\"new task from postman with due date!\",\r\n    \"due_date\":\"2024-03-18\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/tasks",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tasks"
+							]
+						},
+						"description": "The tests in this request validate that:\n\n- the response code is 200\n- the response is a JSON object\n- the response has an 'arg' object\n- the response has 'headers' object\n- the response has a 'URL' property"
+					},
+					"response": []
+				},
+				{
+					"name": "Test Delete Task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Validate that the response code should be 204",
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/tasks/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tasks",
+								"1"
+							]
+						},
+						"description": "The tests in this request validate that:\n\n- the response code is 200\n- the response is a JSON object\n- the response has an 'arg' object\n- the response has 'headers' object\n- the response has a 'URL' property"
+					},
+					"response": []
+				}
+			],
+			"description": "Set of operations that attack the Tasks API. This counts as Integration testing."
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://127.0.0.1:5001",
+			"type": "string"
+		}
+	]
+}
