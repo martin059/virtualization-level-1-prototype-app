@@ -147,6 +147,28 @@ def insert_due_date(conn, task_id, due_date):
         print(error)
         return error
 
+def update_task(task_id: str, task_name = None, task_descrip = None, task_status = None):
+    """ Updates the data of a Task """
+
+    update_query_base = 'UPDATE app."Task" SET {0} WHERE id = {1}'
+    str = compose_insert_values(task_name, task_descrip, None, task_status)
+    update_query = sql.SQL(update_query_base).format(
+                        sql.SQL(',').join(map(lambda x: sql.SQL('{0} = {1}').format(sql.Identifier(x[0]), sql.Literal(x[1])), zip(str[0], str[1])),
+                        sql.Literal(task_id))
+                    )
+    config  = dbc.load_config()
+    try:
+        with psycopg2.connect(**config) as conn:
+            print(update_query.as_string(conn)) # DEBUG
+#            with conn.cursor() as cur:
+#                cur.execute(update_query)
+#                conn.commit()
+#                return None
+#
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        return error
+
 def delete_task(task_id: str):
     """ Updates the state of a Task to be 'DELETED' """
 
