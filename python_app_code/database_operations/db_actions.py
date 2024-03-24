@@ -70,7 +70,7 @@ def get_due_by(task_id: str):
         print(error)
         return None
 
-def compose_insert_update_values(task_name, task_descrip, creation_date, task_status):
+def compose_task_insert_update_values(task_name, task_descrip, creation_date, task_status):
     column_names = ["task_name"]
     values = [task_name]
     if (task_descrip is not None):
@@ -92,7 +92,7 @@ def insert_into_task_table(task_name, task_descrip = None, creation_date = None,
     """ A new task in the database, if successful returns new tasks id from the DB"""
 
     # TODO maybe add some error catching in here so that the DB doens't do it?
-    str = compose_insert_update_values(task_name, task_descrip, creation_date, task_status)
+    str = compose_task_insert_update_values(task_name, task_descrip, creation_date, task_status)
 
     # Doc about how to compose SQL https://www.psycopg.org/docs/sql.html
     insert_query_base = "INSERT INTO app.\"Task\"({columns}) VALUES({values}) RETURNING id;"
@@ -150,7 +150,7 @@ def update_task(task_id: str, task_name = None, task_descrip = None, task_creati
     """ Updates the data of a Task """
 
     update_query_base = 'UPDATE app."Task" SET {0} WHERE id = {1}'
-    str = compose_insert_update_values(task_name, task_descrip, task_creation_date, task_status)
+    str = compose_task_insert_update_values(task_name, task_descrip, task_creation_date, task_status)
     update_query = sql.SQL(update_query_base).format(
                         sql.SQL(',').join(map(lambda x: sql.SQL('{0} = {1}').format(sql.Identifier(x[0]), sql.Literal(x[1])), zip(str[0], str[1]))),
                         sql.Literal(task_id)
