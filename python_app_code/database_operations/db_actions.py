@@ -186,6 +186,49 @@ def delete_task(task_id: str):
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
         return error
+    
+def insert_into_due_by_table(task_id, due_date):
+    """ Insert or update a due date for a task in the Due_by table """
+    select_query_base = 'SELECT * FROM app."Due_by" WHERE task_id = {0}'
+    select_query = sql.SQL(select_query_base).format(sql.Literal(task_id))
+    update_query_base = 'UPDATE app."Due_by" SET is_active = false WHERE task_id = {0} AND is_active = true'
+    update_query = sql.SQL(update_query_base).format(sql.Literal(task_id))
+    insert_query_base = 'INSERT INTO app."Due_by" (task_id, due_date, is_active) VALUES ({0}, {1}, true)'
+    insert_query = sql.SQL(insert_query_base).format(sql.Literal(task_id), sql.Literal(due_date))
+    config = dbc.load_config()
+    try:
+        with psycopg2.connect(**config) as conn:
+            with conn.cursor() as cur:
+                # Check if the task has an active due date
+                cur.execute(select_query)
+                rows = cur.fetchall()
+                if rows:
+                    active_due_date = None
+                    for row in rows:
+                        if row['is_active']:
+                            active_due_date = row['due_date']
+                            break
+                    # If the new due date is different from the active one, update the active row
+                    if active_due_date != due_date:
+                        cur.execute(update_query)
+                else:
+                    active_due_date = None
+                # Check if the new due date is already present in the table with is_active = false
+                cur.execute(select_query)
+                rows = cur.fetchall()
+                if rows:
+                    for row in rows:
+                        if not row['is_active'] and row['due_date'] == due_date:
+                            cur.execute(update_query)
+                            break
+                # If the new due date is not present, insert a new row
+                else:
+                    cur.execute(insert_query)
+                conn.commit()
+                return None
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        return error
 
 # The following two operations are for debugging since they print directly their results to the console
 def print_all_tasks():
