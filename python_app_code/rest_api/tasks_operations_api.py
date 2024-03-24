@@ -73,7 +73,6 @@ def update_task(task_id, received_request: request):
       tmp = validate_json(received_request)
       if tmp[1] == 200:
          update_task = parse_new_task_request(received_request.get_json())
-         # TODO maybe check if all the parameters are required to do the update here or not
          response = dba.update_task(id, update_task["task_name"], update_task["task_descrip"], 
                                     update_task["creation_date"], update_task["task_status"], update_task["due_date"])
          if response is None:
