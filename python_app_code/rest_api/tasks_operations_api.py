@@ -71,14 +71,29 @@ def add_task(received_request: request):
       return jsonify({"new_task_id": new_task_id}), 201
    else:
       return tmp[0], tmp[1]
-   
+
+def post_due_date(task_id, received_request: request):
+   #The code won't validate if the due_date has a valid format
+   id = int(task_id)
+   task = dba.get_a_task(id)
+   if task is None or len(task) == 0:
+      return jsonify({'error': 'Task with id {} not found, create a task beforehand'.format(id)}), 404
+   else:
+      tmp = validate_due_date_json(received_request)
+      if tmp[1] == 200:
+         new_due_date = parse_new_task_request(received_request.get_json())
+         new_due_date_id = dba.insert_into_due_by_table(id, new_due_date["due_date"])
+         return jsonify({"new_due_date_id": new_due_date_id}), 201
+      else:
+         return tmp[0], tmp[1]
+
 def update_task(task_id, received_request: request):
    id = int(task_id)
    task = dba.get_a_task(id)
    if task is None or len(task) == 0:
       return jsonify({'error': 'Task with id {} not found'.format(id)}), 404
    else:
-      tmp = validate_json(received_request)
+      tmp = validate_json(received_request, False)
       if tmp[1] == 200:
          update_task = parse_new_task_request(received_request.get_json())
          response = dba.update_task(id, update_task["task_name"], update_task["task_descrip"], 
@@ -98,14 +113,16 @@ def delete_task(task_id):
       return jsonify({"error": str(response)}), 400
       
     
-def validate_json(received_request: request):
+def validate_json(received_request: request, needs_to_have_name: bool = True):
    if not received_request.json:  # Check if the request body is empty
        return jsonify({'error': 'Empty request body'}), 400
    
    if received_request.is_json:
        try:
            req = received_request.get_json()
-           if has_task_name(req):
+           if not needs_to_have_name:
+               return jsonify({"message": "Valid JSON received"}), 200
+           elif has_task_name(req):
               return jsonify({"message": "Valid JSON received"}), 200
            else:
               return jsonify({"error": "A new Task must have a 'task_name'."}), 400
@@ -117,10 +134,30 @@ def validate_json(received_request: request):
 def has_task_name(new_task_to_validate: dict):
    # Returns True if the JSON data has a field named "task_name", False otherwise.
    return "task_name" in new_task_to_validate
+   
+def validate_due_date_json(received_request: request):
+   if not received_request.json:  # Check if the request body is empty
+       return jsonify({'error': 'Empty request body'}), 400
+   
+   if received_request.is_json:
+       try:
+           req = received_request.get_json()
+           if has_due_date(req):
+              return jsonify({"message": "Valid JSON received"}), 200
+           else:
+              return jsonify({"error": "A new Due Date must have a 'due_date'."}), 400
+       except Exception as e:
+           return jsonify({"error": "Invalid JSON format", "details": str(e)}), 400
+   else:
+       return jsonify({"error": "Request does not contain JSON data"}), 400
+
+def has_due_date(new_due_date_to_validate: dict):
+   # Returns True if the JSON data has a field named "due_date", False otherwise.
+   return "due_date" in new_due_date_to_validate
 
 def parse_new_task_request(received_request: dict):
    parsed_req = {}
-   parsed_req["task_name"] = received_request["task_name"]
+   parsed_req["task_name"] = received_request["task_name"] if isinstance(received_request, dict) else None
    parsed_req["task_descrip"] = received_request.get("task_descrip") if isinstance(received_request, dict) else None
    parsed_req["creation_date"] = received_request.get("creation_date") if isinstance(received_request, dict) else None
    parsed_req["task_status"] = received_request.get("task_status") if isinstance(received_request, dict) else None
