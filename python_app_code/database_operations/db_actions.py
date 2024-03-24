@@ -149,6 +149,7 @@ def insert_due_date(conn, task_id, due_date):
 def update_task(task_id: str, task_name = None, task_descrip = None, task_creation_date = None, task_status = None, due_date = None):
     """ Updates the data of a Task """
 
+    # TODO due_date functionality must be added later
     update_query_base = 'UPDATE app."Task" SET {0} WHERE id = {1}'
     str = compose_task_insert_update_values(task_name, task_descrip, task_creation_date, task_status)
     update_query = sql.SQL(update_query_base).format(
