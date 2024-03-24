@@ -41,14 +41,22 @@ def list_tasks():
 def get_task(id: str):
    try:
       id = int(id)
-      return dba.get_a_task(id)
+      db_response = dba.get_a_task(id)
+      if db_response is None or len(db_response) == 0:
+         return jsonify({'error': 'Task with id {} not found'.format(id)}), 404
+      else:
+         return db_response
    except ValueError:
       return jsonify({'error': 'Parameter "id" in "/tasks/<id>" must be an integer.'}), 400
    
 def get_task_due_dates(id: str):
    try:
       id = int(id)
-      return dba.get_due_by(id)
+      db_response = dba.get_due_by(id)
+      if db_response is None or len(db_response) == 0:
+         return jsonify({'error': 'Task\'s due date with task\'s id {} not found'.format(id)}), 404
+      else:
+         return db_response
    except ValueError:
       return jsonify({'error': 'Parameter "task-id" in "/tasks/<task-id>/due-by" must be an integer.'}), 400 
    
