@@ -187,6 +187,7 @@ def delete_task(task_id: str):
         print(error)
         return error
     
+# TODO CHECK IT IF IT WORKS AS EXPECTED !!!!!!!!!!
 def insert_into_due_by_table(task_id, due_date):
     """ Insert or update a due date for a task in the Due_by table """
     select_query_base = 'SELECT * FROM app."Due_by" WHERE task_id = {0}'
@@ -196,7 +197,7 @@ def insert_into_due_by_table(task_id, due_date):
     insert_query_base = 'INSERT INTO app."Due_by" (task_id, due_date, is_active) VALUES ({0}, {1}, true)'
     insert_query = sql.SQL(insert_query_base).format(sql.Literal(task_id), sql.Literal(due_date))
     config = dbc.load_config()
-    # TODO add return message saying what was done
+    msg = None
     try:
         with psycopg2.connect(**config) as conn:
             with conn.cursor() as cur:
@@ -212,6 +213,7 @@ def insert_into_due_by_table(task_id, due_date):
                     # If the new due date is different from the active one, update the active row
                     if active_due_date != due_date:
                         cur.execute(update_query)
+                        msg = "Updated active due date"
                 else:
                     active_due_date = None
                 # Check if the new due date is already present in the table with is_active = false
@@ -221,12 +223,13 @@ def insert_into_due_by_table(task_id, due_date):
                     for row in rows:
                         if not row['is_active'] and row['due_date'] == due_date:
                             cur.execute(update_query)
-                            break
+                            msg = f"Updated active due date for task id: {task_id}"
                 # If the new due date is not present, insert a new row
                 else:
                     cur.execute(insert_query)
+                    msg = "Inserted new due date"
                 conn.commit()
-                return None
+                return msg
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
         return error
