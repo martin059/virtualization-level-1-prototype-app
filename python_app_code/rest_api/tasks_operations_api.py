@@ -5,7 +5,7 @@ import re
 tasks_api = Blueprint('tasks_api', __name__)
 
 @tasks_api.route('/tasks', methods=['GET', 'POST'])
-@tasks_api.route('/tasks/<task_id>', methods=['GET', 'DELETE'])
+@tasks_api.route('/tasks/<task_id>', methods=['GET', 'PUT', 'DELETE'])
 def list_tasks_route(task_id = None):
    if request.method == 'GET':
       if task_id is None:
@@ -19,6 +19,11 @@ def list_tasks_route(task_id = None):
          return jsonify({'error': 'Parameter "task-id" in "/tasks/<task-id>/" must be given to delete a task.'}), 400
       else:
          return delete_task(task_id)
+   elif request.method == "PUT":
+      if task_id is None:
+         return jsonify({'error': 'Parameter "task-id" in "/tasks/<task-id>/" must be given to update a task.'}), 400
+      else:
+         return update_task(task_id, request)
    
 @tasks_api.route('/tasks/<task_id>/due-by', methods=['GET', 'POST'])
 def list_due_by_route(task_id):
@@ -58,6 +63,25 @@ def add_task(received_request: request):
       return jsonify({"new_task_id": new_task_id}), 201
    else:
       return tmp[0], tmp[1]
+   
+def update_task(task_id, received_request: request):
+   id = int(task_id)
+   task = dba.get_a_task(id)
+   if task is None or len(task) == 0:
+      return jsonify({'error': 'Task with id {} not found'.format(id)}), 404
+   else:
+      tmp = validate_json(received_request)
+      if tmp[1] == 200:
+         update_task = parse_new_task_request(received_request.get_json())
+         # TODO maybe check if all the parameters are required to do the update here or not
+         response = dba.update_task(id, update_task["task_name"], update_task["task_descrip"], 
+                                    update_task["creation_date"], update_task["task_status"], update_task["due_date"])
+         if response is None:
+            return '', 204
+         else:
+            return jsonify({"error": str(response)}), 400
+      else:
+         return tmp[0], tmp[1]
 
 def delete_task(task_id):
    response = dba.delete_task(task_id)
