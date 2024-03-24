@@ -196,6 +196,7 @@ def insert_into_due_by_table(task_id, due_date):
     insert_query_base = 'INSERT INTO app."Due_by" (task_id, due_date, is_active) VALUES ({0}, {1}, true)'
     insert_query = sql.SQL(insert_query_base).format(sql.Literal(task_id), sql.Literal(due_date))
     config = dbc.load_config()
+    # TODO add return message saying what was done
     try:
         with psycopg2.connect(**config) as conn:
             with conn.cursor() as cur:

@@ -82,8 +82,8 @@ def post_due_date(task_id, received_request: request):
       tmp = validate_due_date_json(received_request)
       if tmp[1] == 200:
          new_due_date = parse_new_task_request(received_request.get_json())
-         new_due_date_id = dba.insert_into_due_by_table(id, new_due_date["due_date"])
-         return jsonify({"new_due_date_id": new_due_date_id}), 201
+         response = dba.insert_into_due_by_table(id, new_due_date["due_date"])
+         return jsonify({"new_due_date_id": new_due_date_id}), 201 # TODO take into account the returned message
       else:
          return tmp[0], tmp[1]
 
