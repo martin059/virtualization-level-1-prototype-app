@@ -129,7 +129,6 @@ def insert_into_task_table(task_name, task_descrip = None, creation_date = None,
 
 def insert_due_date(conn, task_id, due_date):
     # First version of this function won't take into account to update the due date if there was one before, it just inserts it.
-    # TODO finish this function's logic or do it in another way/place
 
     insert_query_base = "INSERT INTO app.\"Due_by\"({columns}) VALUES({values});"
     insert_query = sql.SQL(insert_query_base).format(
