@@ -436,6 +436,84 @@
 					"response": []
 				},
 				{
+					"name": "Test KO-1 GET one Task from DB",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Validate that the response code should be 404",
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"// Validate that the response is json object",
+									"pm.test(\"Response is a json object\", function () {",
+									"    pm.expect(pm.response).to.be.an('object');",
+									"});",
+									"",
+									"pm.test(\"Body has error tag\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('error');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/tasks/-1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tasks",
+								"-1"
+							]
+						},
+						"description": "The tests in this request validate that:\n\n- the response code is 200\n- the response is a JSON object\n- the response has an 'arg' object\n- the response has 'headers' object\n- the response has a 'URL' property"
+					},
+					"response": []
+				},
+				{
+					"name": "Test KO-2 GET one Task from DB",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Validate that the response code should be 400",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/tasks/aa",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tasks",
+								"aa"
+							]
+						},
+						"description": "The tests in this request validate that:\n\n- the response code is 200\n- the response is a JSON object\n- the response has an 'arg' object\n- the response has 'headers' object\n- the response has a 'URL' property"
+					},
+					"response": []
+				},
+				{
 					"name": "Test Get a Task due dates from DB",
 					"event": [
 						{
@@ -483,7 +561,7 @@
 					"response": []
 				},
 				{
-					"name": "Test Get unexistent Task due dates from DB",
+					"name": "Test KO-1 GET Task due dates from DB",
 					"event": [
 						{
 							"listen": "test",
@@ -528,7 +606,7 @@
 					"response": []
 				},
 				{
-					"name": "Test KO GET a Task due dates from DB",
+					"name": "Test KO-2 GET Task due dates from DB",
 					"event": [
 						{
 							"listen": "test",
@@ -687,6 +765,114 @@
 							],
 							"path": [
 								"tasks"
+							]
+						},
+						"description": "The tests in this request validate that:\n\n- the response code is 200\n- the response is a JSON object\n- the response has an 'arg' object\n- the response has 'headers' object\n- the response has a 'URL' property"
+					},
+					"response": []
+				},
+				{
+					"name": "Test Update Task in DB",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Validate that the response code should be 204",
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"task_name\":\"Task REST with put\",\r\n    \"task_descrip\":\"a modified task from postman using PUT!\",\r\n    \"creation_date\": \"2024-03-24\",\r\n    \"task_status\": \"Dropped\",\r\n    \"due_date\":\"2024-03-18\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/tasks/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tasks",
+								"1"
+							]
+						},
+						"description": "The tests in this request validate that:\n\n- the response code is 200\n- the response is a JSON object\n- the response has an 'arg' object\n- the response has 'headers' object\n- the response has a 'URL' property"
+					},
+					"response": []
+				},
+				{
+					"name": "Test KO Update Task in DB",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Validate that the response code should be 404",
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"// Validate that the response is json object",
+									"pm.test(\"Response is a json object\", function () {",
+									"    pm.expect(pm.response).to.be.an('object');",
+									"});",
+									"",
+									"pm.test(\"Body has error tag\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('error');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/tasks/-2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tasks",
+								"-2"
 							]
 						},
 						"description": "The tests in this request validate that:\n\n- the response code is 200\n- the response is a JSON object\n- the response has an 'arg' object\n- the response has 'headers' object\n- the response has a 'URL' property"
