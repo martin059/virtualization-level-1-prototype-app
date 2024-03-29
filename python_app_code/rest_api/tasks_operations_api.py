@@ -170,11 +170,11 @@ def post_due_date(task_id: int, received_request: request, comming_from_put: boo
             if not comming_from_put:
                if check_if_due_date_exists is not None and len(check_if_due_date_exists) > 0:
                   return jsonify({"error": "Due date already exists for this task, use PUT method instead to update it."}), 409
-               else:
-                  if check_if_due_date_exists is None or len(check_if_due_date_exists) == 0:
-                     return jsonify({"error": "Due date doesn't exists for this task, use POST method instead to create it."}), 404
+            else: 
+               if check_if_due_date_exists is None or len(check_if_due_date_exists) == 0:
+                  return jsonify({"error": "Due date doesn't exists for this task, use POST method instead to create it."}), 404
             response = dba.insert_into_due_by_table(id, parsed_req["due_date"])
-            return jsonify({"message": response}), 201
+            return jsonify({"message": response}), 200 if comming_from_put else 201
          else:
             return tmp[0], tmp[1]
    except Exception as e:
