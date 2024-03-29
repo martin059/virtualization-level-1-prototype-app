@@ -344,7 +344,7 @@
 			"name": "Task Operations",
 			"item": [
 				{
-					"name": "Test Get Tasks from DB",
+					"name": "Test GET Tasks from DB",
 					"event": [
 						{
 							"listen": "test",
@@ -390,7 +390,7 @@
 					"response": []
 				},
 				{
-					"name": "Test Get one Task from DB",
+					"name": "Test GET one Task from DB",
 					"event": [
 						{
 							"listen": "test",
@@ -514,7 +514,7 @@
 					"response": []
 				},
 				{
-					"name": "Test Get a Task due dates from DB",
+					"name": "Test GET a Task due dates from DB",
 					"event": [
 						{
 							"listen": "test",
@@ -641,7 +641,7 @@
 					"response": []
 				},
 				{
-					"name": "Test KO Get one Task",
+					"name": "Test KO GET one Task",
 					"event": [
 						{
 							"listen": "test",
@@ -675,7 +675,7 @@
 					"response": []
 				},
 				{
-					"name": "Test KO Post new Task",
+					"name": "Test KO POST new Task",
 					"event": [
 						{
 							"listen": "test",
@@ -714,7 +714,7 @@
 					"response": []
 				},
 				{
-					"name": "Test Post new Task to DB",
+					"name": "Test POST new Task to DB",
 					"event": [
 						{
 							"listen": "test",
@@ -772,7 +772,7 @@
 					"response": []
 				},
 				{
-					"name": "Test Update Task in DB",
+					"name": "Test PUT Update Task in DB",
 					"event": [
 						{
 							"listen": "test",
@@ -799,7 +799,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"task_name\":\"Task REST with put\",\r\n    \"task_descrip\":\"a modified task from postman using PUT!\",\r\n    \"creation_date\": \"2024-03-24\",\r\n    \"task_status\": \"Dropped\",\r\n    \"due_date\":\"2024-03-18\"\r\n}",
+							"raw": "{\r\n    \"task_descrip\":\"a modified task from postman using PUT!\",\r\n    \"creation_date\": \"2024-03-24\",\r\n    \"task_status\": \"Dropped\",\r\n    \"due_date\":\"2024-03-18\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -821,7 +821,7 @@
 					"response": []
 				},
 				{
-					"name": "Test KO Update Task in DB",
+					"name": "Test KO PUT Update Task in DB",
 					"event": [
 						{
 							"listen": "test",
@@ -880,7 +880,7 @@
 					"response": []
 				},
 				{
-					"name": "Test Delete Task",
+					"name": "Test DELETE Task",
 					"event": [
 						{
 							"listen": "test",
@@ -915,6 +915,317 @@
 				}
 			],
 			"description": "Set of operations that attack the Tasks API. This counts as Integration testing."
+		},
+		{
+			"name": "Due date operations",
+			"item": [
+				{
+					"name": "Test POST KO due date to DB UC0",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Validate that the response code should be 404",
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"// Validate that the response is json object",
+									"pm.test(\"Response is a json object\", function () {",
+									"    pm.expect(pm.response.json()).to.be.an('object');",
+									"});",
+									"",
+									"pm.test(\"Body has the expected error\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('error');",
+									"    pm.expect(jsonData.error).to.eql('Task with id -1 not found, create a task beforehand');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"due_date\":\"2024-03-20\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/tasks/-1/due-by",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tasks",
+								"-1",
+								"due-by"
+							]
+						},
+						"description": "The tests in this request validate that:\n\n- the response code is 200\n- the response is a JSON object\n- the response has an 'arg' object\n- the response has 'headers' object\n- the response has a 'URL' property"
+					},
+					"response": []
+				},
+				{
+					"name": "Test POST new due date to DB UC1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Validate that the response code should be 200",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Validate that the response is json object",
+									"pm.test(\"Response is a json object\", function () {",
+									"    pm.expect(pm.response.json()).to.be.an('object');",
+									"});",
+									"",
+									"pm.test(\"Body has the expected message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"    pm.expect(jsonData.message).to.eql('Insert new active due date for task id: 1');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"due_date\":\"2024-03-20\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/tasks/1/due-by",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tasks",
+								"1",
+								"due-by"
+							]
+						},
+						"description": "The tests in this request validate that:\n\n- the response code is 200\n- the response is a JSON object\n- the response has an 'arg' object\n- the response has 'headers' object\n- the response has a 'URL' property"
+					},
+					"response": []
+				},
+				{
+					"name": "Test POST duplicate due date UC2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Validate that the response code should be 200",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Validate that the response is json object",
+									"pm.test(\"Response is a json object\", function () {",
+									"    pm.expect(pm.response.json()).to.be.an('object');",
+									"});",
+									"",
+									"pm.test(\"Body has the expected message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"    pm.expect(jsonData.message).to.eql('New due date is the same as the active one');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"due_date\":\"2024-03-20\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/tasks/1/due-by",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tasks",
+								"1",
+								"due-by"
+							]
+						},
+						"description": "The tests in this request validate that:\n\n- the response code is 200\n- the response is a JSON object\n- the response has an 'arg' object\n- the response has 'headers' object\n- the response has a 'URL' property"
+					},
+					"response": []
+				},
+				{
+					"name": "Test POST new due date to DB UC3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Validate that the response code should be 200",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Validate that the response is json object",
+									"pm.test(\"Response is a json object\", function () {",
+									"    pm.expect(pm.response.json()).to.be.an('object');",
+									"});",
+									"",
+									"pm.test(\"Body has the expected message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"    pm.expect(jsonData.message).to.eql('Insert new active due date for task id: 1');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"due_date\":\"2024-03-21\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/tasks/1/due-by",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tasks",
+								"1",
+								"due-by"
+							]
+						},
+						"description": "The tests in this request validate that:\n\n- the response code is 200\n- the response is a JSON object\n- the response has an 'arg' object\n- the response has 'headers' object\n- the response has a 'URL' property"
+					},
+					"response": []
+				},
+				{
+					"name": "Test POST update due date to DB UC4",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Validate that the response code should be 200",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Validate that the response is json object",
+									"pm.test(\"Response is a json object\", function () {",
+									"    pm.expect(pm.response.json()).to.be.an('object');",
+									"});",
+									"",
+									"pm.test(\"Body has the expected message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"    pm.expect(jsonData.message).to.eql('Updated active due date for task id: 1');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"due_date\":\"2024-03-20\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/tasks/1/due-by",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tasks",
+								"1",
+								"due-by"
+							]
+						},
+						"description": "The tests in this request validate that:\n\n- the response code is 200\n- the response is a JSON object\n- the response has an 'arg' object\n- the response has 'headers' object\n- the response has a 'URL' property"
+					},
+					"response": []
+				}
+			],
+			"description": "Set of operations that attack the Due-date API. This counts as Integration testing. To test all possible paths of the \"insert_into_due_by_tableEndFragment\" function multiple Use Case (UC) have been defined. For all cases to pass, the DB Due_by table must be empty of due-dates row for the task with id = 1."
 		}
 	],
 	"event": [
