@@ -1,6 +1,6 @@
 from flask import request, Blueprint, jsonify
 import re
-from database_operations import db_actions as dba
+from database_operations import db_task_actions as dba
 from rest_api import api_operations_utils as aou
 
 tasks_api = Blueprint('tasks_api', __name__)

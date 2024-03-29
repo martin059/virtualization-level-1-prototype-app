@@ -1,6 +1,6 @@
 from flask import request, Blueprint, jsonify
 import re
-from database_operations import db_actions as dba
+from database_operations import db_actions as dba, db_task_actions as dbta
 from rest_api import api_operations_utils as aou
 
 due_by_api = Blueprint('due_by_api', __name__)
@@ -67,7 +67,7 @@ def post_due_date(task_id: int, received_request: request, comming_from_put: boo
    """
    id = int(task_id)
    try:
-      task = dba.get_a_task(id)
+      task = dbta.get_a_task(id)
       if task is None or len(task) == 0:
          return jsonify({'error': 'Task with id {} not found, create a task beforehand'.format(id)}), 404
       else:
