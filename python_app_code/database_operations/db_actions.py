@@ -214,6 +214,7 @@ def insert_into_due_by_table(task_id, due_date):
     Returns:
     - str: A message indicating the result of the operation.
     """
+    # Prepare SQL queries and connection settings
     select_query_base = 'SELECT * FROM app."Due_by" WHERE task_id = {0}'
     select_query = sql.SQL(select_query_base).format(sql.Literal(task_id))
     update_deactivate_query_base = 'UPDATE app."Due_by" SET is_active = false WHERE task_id = {0} AND is_active = true'
