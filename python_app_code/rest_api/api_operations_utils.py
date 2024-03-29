@@ -45,7 +45,7 @@ class api_operations_utils:
              req = received_request.get_json()
              if not needs_to_have_name:
                 return jsonify({"message": "Valid JSON received"}), 200
-             elif aou.has_task_name(req):
+             elif api_operations_utils.has_task_name(req):
                 return jsonify({"message": "Valid JSON received"}), 200
              else:
                 return jsonify({"error": "A new Task must have a 'task_name'."}), 400
@@ -86,7 +86,7 @@ class api_operations_utils:
        if received_request.is_json:
           try:
              req = received_request.get_json()
-             if aou.has_valid_due_date(req):
+             if api_operations_utils.has_valid_due_date(req):
                 return jsonify({"message": "Valid JSON received"}), 200
              else:
                 return jsonify({"error": "A new Due Date must have a valid 'due_date' with the 'YYYY-MM-DD' format."}), 400
