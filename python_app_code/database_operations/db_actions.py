@@ -208,7 +208,7 @@ def insert_into_due_by_table(task_id, due_date):
     msg = None
     try:
         with psycopg2.connect(**config) as conn:
-            with conn.cursor() as cur:
+            with conn.cursor(cursor_factory=RealDictCursor) as cur:
                 # Check if the task has an active due date
                 cur.execute(select_query)
                 rows = cur.fetchall()
