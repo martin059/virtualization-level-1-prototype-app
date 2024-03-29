@@ -174,7 +174,7 @@ def is_task_id_valid(task_id: str):
       return False
    if not isinstance(task_id, (int, float, str, bool)):
       return False
-   return re.match(r'^\d+$', task_id)
+   return re.match(r'^-?\d+$', task_id)
    
 def validate_due_date_json(received_request: request):
    if not received_request.json:  # Check if the request body is empty
