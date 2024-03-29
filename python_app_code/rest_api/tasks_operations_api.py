@@ -88,7 +88,7 @@ def post_due_date(task_id, received_request: request):
       if tmp[1] == 200:
          parsed_req = parse_received_request(received_request.get_json())
          check_if_due_date_exists = dba.get_specific_due_by(id, parsed_req["due_date"])
-         if check_if_due_date_exists is not None or len(check_if_due_date_exists) > 0:
+         if check_if_due_date_exists is not None and len(check_if_due_date_exists) > 0:
             return jsonify({"error": "Due date already exists for this task, use PUT method instead to update it."}), 409
          response = dba.insert_into_due_by_table(id, parsed_req["due_date"])
          if not(isinstance(response, Exception)):
