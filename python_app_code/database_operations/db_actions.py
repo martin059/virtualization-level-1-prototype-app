@@ -4,9 +4,6 @@ import psycopg2
 from psycopg2 import sql
 from psycopg2.extras import RealDictCursor
 from typing import Optional, Tuple
-import psycopg2
-from psycopg2 import sql
-from psycopg2.extras import RealDictCursor
 
 def connect(config = None) -> psycopg2.extensions.connection:
     """
