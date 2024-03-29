@@ -1,5 +1,7 @@
 from configparser import ConfigParser
 
+# This script contains the configuration parameters for the database connection
+
 def load_config(filename='database_operations/database.ini', section='postgresql'):
     parser = ConfigParser()
     parser.read(filename)
