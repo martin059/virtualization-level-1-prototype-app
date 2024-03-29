@@ -43,7 +43,7 @@ def list_due_by_route(task_id):
    elif request.method == "POST":
       return post_due_date(task_id, request)
    elif request.method == "PUT":
-      return 'NOT YET DONE'
+      return put_due_date(task_id, request)
    
 def list_tasks():
    return dba.get_all_tasks()
@@ -79,7 +79,6 @@ def add_task(received_request: request):
       return tmp[0], tmp[1]
 
 def post_due_date(task_id, received_request: request):
-   #The code won't validate if the due_date has a valid format
    id = int(task_id)
    task = dba.get_a_task(id)
    if task is None or len(task) == 0:
@@ -99,8 +98,25 @@ def post_due_date(task_id, received_request: request):
       else:
          return tmp[0], tmp[1]
       
-#def put_due_date(task_id, received_request: request):
-#   # TODO - Implement this method
+def put_due_date(task_id, received_request: request):
+   id = int(task_id)
+   task = dba.get_a_task(id)
+   if task is None or len(task) == 0:
+      return jsonify({'error': 'Task with id {} not found, create a task beforehand'.format(id)}), 404
+   else:
+      tmp = validate_due_date_json(received_request)
+      if tmp[1] == 200:
+         parsed_req = parse_received_request(received_request.get_json())
+         check_if_due_date_exists = dba.get_specific_due_by(id, parsed_req["due_date"])
+         if check_if_due_date_exists is None or len(check_if_due_date_exists) == 0:
+            return jsonify({"error": "Due date doesn't exists for this task, use POST method instead to create it."}), 404
+         response = dba.insert_into_due_by_table(id, parsed_req["due_date"])
+         if not(isinstance(response, Exception)):
+            return jsonify({"message": response}), 200
+         else:
+            return jsonify({"error": str(response)}), 400
+      else:
+         return tmp[0], tmp[1]
 
 def update_task(task_id, received_request: request):
    id = int(task_id)
@@ -167,18 +183,20 @@ def validate_due_date_json(received_request: request):
    if received_request.is_json:
        try:
            req = received_request.get_json()
-           if has_due_date(req):
+           if has_valid_due_date(req):
               return jsonify({"message": "Valid JSON received"}), 200
            else:
-              return jsonify({"error": "A new Due Date must have a 'due_date'."}), 400
+              return jsonify({"error": "A new Due Date must have a valid 'due_date' with the 'YYYY-MM-DD' format."}), 400
        except Exception as e:
            return jsonify({"error": "Invalid JSON format", "details": str(e)}), 400
    else:
        return jsonify({"error": "Request does not contain JSON data"}), 400
 
-def has_due_date(new_due_date_to_validate: dict):
-   # Returns True if the JSON data has a field named "due_date", False otherwise.
-   return "due_date" in new_due_date_to_validate
+def has_valid_due_date(new_due_date_to_validate: dict):
+   # Returns True if the JSON data has a field named "due_date" with a valid format, False otherwise.
+   return ("due_date" in new_due_date_to_validate and 
+           isinstance(new_due_date_to_validate["due_date"], str) and 
+           re.match(r'^\d{4}-\d{2}-\d{2}$', new_due_date_to_validate["due_date"]))
 
 def parse_received_request(received_request: dict):
    parsed_req = {}
