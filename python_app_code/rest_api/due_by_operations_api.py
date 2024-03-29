@@ -1,7 +1,8 @@
 from flask import request, Blueprint, jsonify
-import re
-from database_operations import db_actions as dba, db_task_actions as dbta
+from database_operations import db_due_by_actions as dba, db_task_actions as dbta
 from rest_api import api_operations_utils as aou
+
+# This script defines the REST API endpoints for the operations that can be done on the Due_by table
 
 due_by_api = Blueprint('due_by_api', __name__)
 utils = aou.api_operations_utils()
