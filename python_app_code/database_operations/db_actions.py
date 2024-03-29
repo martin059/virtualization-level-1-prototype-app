@@ -214,15 +214,7 @@ def insert_into_due_by_table(task_id, due_date):
     Returns:
     - str: A message indicating the result of the operation.
     """
-    # Prepare SQL queries and connection settings
-    select_query_base = 'SELECT * FROM app."Due_by" WHERE task_id = {0}'
-    select_query = sql.SQL(select_query_base).format(sql.Literal(task_id))
-    update_deactivate_query_base = 'UPDATE app."Due_by" SET is_active = false WHERE task_id = {0} AND is_active = true'
-    update_activate_query_base = 'UPDATE app."Due_by" SET is_active = true WHERE task_id = {0} AND due_date = {1}'
-    update_deactivate_query = sql.SQL(update_deactivate_query_base).format(sql.Literal(task_id))
-    update_activate_query = sql.SQL(update_activate_query_base).format(sql.Literal(task_id), sql.Literal(due_date))
-    insert_query_base = 'INSERT INTO app."Due_by" (task_id, due_date, is_active) VALUES ({0}, {1}, true)'
-    insert_query = sql.SQL(insert_query_base).format(sql.Literal(task_id), sql.Literal(due_date))
+    select_query, update_deactivate_query, update_activate_query, insert_query = prep_insert_due_date_queries(task_id, due_date)
     config = dbc.load_config()
     msg = None
     try:
@@ -231,7 +223,7 @@ def insert_into_due_by_table(task_id, due_date):
                 # Check if the task has an active due date
                 cur.execute(select_query)
                 rows = cur.fetchall()
-                update_necessary = True
+                modification_necessary = True
                 due_date_already_present = False
                 if rows:
                     active_due_date = None
@@ -245,14 +237,14 @@ def insert_into_due_by_table(task_id, due_date):
                         cur.execute(update_deactivate_query) # Deactivate previous old due date
                         msg = "Updated active due date"
                     else:
-                        update_necessary = False
+                        modification_necessary = False
                         msg = "New due date is the same as the active one"
-                # If update is necessary, and due date is already present, activate row
-                if update_necessary:
+                # If modification is necessary, and due date is already present, activate row
+                if modification_necessary:
                     if due_date_already_present:
                         cur.execute(update_activate_query)
                         msg = f"Updated active due date for task id: {task_id}"
-                    # If update is necessary, and new due date is not present, insert a new row
+                    # If modification is necessary, and new due date is not present, insert a new row
                     else:
                         cur.execute(insert_query)
                         msg = f"Insert new active due date for task id: {task_id}"
@@ -261,6 +253,18 @@ def insert_into_due_by_table(task_id, due_date):
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
         return error
+    
+def prep_insert_due_date_queries(task_id, due_date):
+    """ Prepare SQL queries for updating due dates """
+    select_query_base = 'SELECT * FROM app."Due_by" WHERE task_id = {0}'
+    select_query = sql.SQL(select_query_base).format(sql.Literal(task_id))
+    update_deactivate_query_base = 'UPDATE app."Due_by" SET is_active = false WHERE task_id = {0} AND is_active = true'
+    update_activate_query_base = 'UPDATE app."Due_by" SET is_active = true WHERE task_id = {0} AND due_date = {1}'
+    update_deactivate_query = sql.SQL(update_deactivate_query_base).format(sql.Literal(task_id))
+    update_activate_query = sql.SQL(update_activate_query_base).format(sql.Literal(task_id), sql.Literal(due_date))
+    insert_query_base = 'INSERT INTO app."Due_by" (task_id, due_date, is_active) VALUES ({0}, {1}, true)'
+    insert_query = sql.SQL(insert_query_base).format(sql.Literal(task_id), sql.Literal(due_date))
+    return select_query, update_deactivate_query, update_activate_query, insert_query
 
 # The following two operations are for debugging since they print directly their results to the console
 def print_all_tasks():
