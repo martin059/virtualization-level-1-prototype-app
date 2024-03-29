@@ -4,6 +4,7 @@ from database_operations import db_actions as dba
 from rest_api import api_operations_utils as aou
 
 tasks_api = Blueprint('tasks_api', __name__)
+utils = aou.api_operations_utils()
 
 @tasks_api.route('/tasks', methods=['GET', 'POST'])
 @tasks_api.route('/tasks/<task_id>', methods=['GET', 'PUT', 'DELETE'])
@@ -18,7 +19,7 @@ def list_tasks_route(task_id: int = None) -> jsonify:
       JSON response: The response containing the result of the operation or an error message.
    """
    if task_id is not None:
-      if not aou.is_task_id_valid(task_id):
+      if not utils.is_task_id_valid(task_id):
          return jsonify({'error': 'Parameter "task-id" in "/tasks/<task-id>" must be a valid integer.'}), 400
       
    if request.method == 'GET':
@@ -50,7 +51,7 @@ def list_due_by_route(task_id: int) -> jsonify:
    Returns:
       jsonify: The response containing the due dates or an error message.
    """
-   if not aou.is_task_id_valid(task_id):
+   if not utils.is_task_id_valid(task_id):
       return jsonify({'error': 'Parameter "task-id" in "/tasks/<task-id>/due-by" must be a valid integer.'}), 400
    if request.method == 'GET':
       return get_task_due_dates(task_id)
@@ -125,11 +126,11 @@ def add_task(received_request: request) -> jsonify:
    Returns:
       A JSON response containing the new task ID if successful, or an error message if unsuccessful.
    """
-   tmp = aou.validate_json(received_request)
+   tmp = utils.validate_json(received_request)
    if tmp[1] == 200:
-      new_task = aou.parse_received_request(received_request.get_json())
+      new_task = utils.parse_received_request(received_request.get_json())
       if new_task["due_date"] is not None:
-         if not aou.validate_due_date_json(received_request):
+         if not utils.validate_due_date_json(received_request):
             return jsonify({"error": "A Due Date must have a valid 'due_date' with the 'YYYY-MM-DD' format."}), 400
       try:
          response = dba.insert_into_task_table(new_task["task_name"], new_task["task_descrip"], 
@@ -164,9 +165,9 @@ def post_due_date(task_id: int, received_request: request, comming_from_put: boo
       if task is None or len(task) == 0:
          return jsonify({'error': 'Task with id {} not found, create a task beforehand'.format(id)}), 404
       else:
-         tmp = aou.validate_due_date_json(received_request)
+         tmp = utils.validate_due_date_json(received_request)
          if tmp[1] == 200:
-            parsed_req = aou.parse_received_request(received_request.get_json())
+            parsed_req = utils.parse_received_request(received_request.get_json())
             check_if_due_date_exists = dba.get_specific_due_by(id, parsed_req["due_date"])
             if not comming_from_put:
                if check_if_due_date_exists is not None and len(check_if_due_date_exists) > 0:
@@ -212,11 +213,11 @@ def update_task(task_id: int, received_request: request) -> jsonify:
       if task is None or len(task) == 0:
          return jsonify({'error': 'Task with id {} not found'.format(id)}), 404
       else:
-         tmp = aou.validate_json(received_request, False)
+         tmp = utils.validate_json(received_request, False)
          if tmp[1] == 200:
-            update_task = aou.parse_received_request(received_request.get_json())
+            update_task = utils.parse_received_request(received_request.get_json())
             if update_task["due_date"] is not None:
-               if not aou.validate_due_date_json(received_request):
+               if not utils.validate_due_date_json(received_request):
                   return jsonify({"error": "A Due Date must have a valid 'due_date' with the 'YYYY-MM-DD' format."}), 400
             response = dba.update_task(id, update_task["task_name"], update_task["task_descrip"], 
                                  update_task["creation_date"], update_task["task_status"], update_task["due_date"])
