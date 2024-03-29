@@ -226,26 +226,14 @@ def insert_into_due_by_table(task_id, due_date):
                 modification_necessary = True
                 due_date_already_present = False
                 if rows:
-                    active_due_date = None
-                    for row in rows:
-                        if row["is_active"]:
-                            active_due_date = row["due_date"]
-                        if str(row["due_date"]) == due_date:
-                            due_date_already_present = True
-                    # If the new due date is different from the active one, update the active row
-                    if str(active_due_date) != due_date:
-                        cur.execute(update_deactivate_query) # Deactivate previous old due date
-                        msg = "Updated active due date"
-                    else:
-                        modification_necessary = False
-                        msg = "New due date is the same as the active one"
+                    modification_necessary, due_date_already_present, msg = check_current_due_date(cur, rows, due_date, update_deactivate_query)
                 # If modification is necessary, and due date is already present, activate row
                 if modification_necessary:
                     if due_date_already_present:
                         cur.execute(update_activate_query)
                         msg = f"Updated active due date for task id: {task_id}"
-                    # If modification is necessary, and new due date is not present, insert a new row
                     else:
+                        # If modification is necessary, and new due date is not present, insert a new row
                         cur.execute(insert_query)
                         msg = f"Insert new active due date for task id: {task_id}"
                     conn.commit()
@@ -255,7 +243,7 @@ def insert_into_due_by_table(task_id, due_date):
         return error
     
 def prep_insert_due_date_queries(task_id, due_date):
-    """ Prepare SQL queries for updating due dates """
+    """ Prepare SQL queries for inserting/updating due dates """
     select_query_base = 'SELECT * FROM app."Due_by" WHERE task_id = {0}'
     select_query = sql.SQL(select_query_base).format(sql.Literal(task_id))
     update_deactivate_query_base = 'UPDATE app."Due_by" SET is_active = false WHERE task_id = {0} AND is_active = true'
@@ -265,6 +253,24 @@ def prep_insert_due_date_queries(task_id, due_date):
     insert_query_base = 'INSERT INTO app."Due_by" (task_id, due_date, is_active) VALUES ({0}, {1}, true)'
     insert_query = sql.SQL(insert_query_base).format(sql.Literal(task_id), sql.Literal(due_date))
     return select_query, update_deactivate_query, update_activate_query, insert_query
+
+def check_current_due_date(cur, due_date_rows, due_date, update_deactivate_query):
+    modification_necessary = True
+    due_date_already_present = False
+    active_due_date = None
+    for row in due_date_rows:
+        if row["is_active"]:
+            active_due_date = row["due_date"]
+        if str(row["due_date"]) == due_date:
+            due_date_already_present = True
+    # If the new due date is different from the active one, update the active row
+    if str(active_due_date) != due_date:
+        cur.execute(update_deactivate_query) # Deactivate previous old due date
+        msg = "Updated active due date"
+    else:
+        modification_necessary = False
+        msg = "New due date is the same as the active one"
+    return modification_necessary, due_date_already_present, msg
 
 # The following two operations are for debugging since they print directly their results to the console
 def print_all_tasks():
