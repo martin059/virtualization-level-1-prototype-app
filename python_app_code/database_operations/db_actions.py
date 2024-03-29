@@ -71,8 +71,11 @@ def get_due_by(task_id: str):
         return None
 
 def compose_task_insert_update_values(task_name, task_descrip, creation_date, task_status):
-    column_names = ["task_name"]
-    values = [task_name]
+    column_names = []
+    values = []
+    if (task_name is not None):
+        column_names.append("task_name")
+        values.append(task_name)
     if (task_descrip is not None):
         column_names.append('task_descrip')
         values.append(task_descrip)
@@ -84,6 +87,9 @@ def compose_task_insert_update_values(task_name, task_descrip, creation_date, ta
     if (task_status is not None):
         column_names.append('task_status')
         values.append(task_status)
+    
+    if len(column_names) == 0:
+        raise ValueError("No values to insert or update")
     
     return (tuple(column_names), tuple(values))
 
@@ -192,8 +198,10 @@ def insert_into_due_by_table(task_id, due_date):
     """ Insert or update a due date for a task in the Due_by table """
     select_query_base = 'SELECT * FROM app."Due_by" WHERE task_id = {0}'
     select_query = sql.SQL(select_query_base).format(sql.Literal(task_id))
-    update_query_base = 'UPDATE app."Due_by" SET is_active = false WHERE task_id = {0} AND is_active = true'
-    update_query = sql.SQL(update_query_base).format(sql.Literal(task_id))
+    update_deactivate_query_base = 'UPDATE app."Due_by" SET is_active = false WHERE task_id = {0} AND is_active = true'
+    update_activate_query_base = 'UPDATE app."Due_by" SET is_active = true WHERE task_id = {0} AND due_date = {1}'
+    update_deactivate_query = sql.SQL(update_deactivate_query_base).format(sql.Literal(task_id))
+    update_activate_query = sql.SQL(update_activate_query_base).format(sql.Literal(task_id), sql.Literal(due_date))
     insert_query_base = 'INSERT INTO app."Due_by" (task_id, due_date, is_active) VALUES ({0}, {1}, true)'
     insert_query = sql.SQL(insert_query_base).format(sql.Literal(task_id), sql.Literal(due_date))
     config = dbc.load_config()
@@ -204,31 +212,32 @@ def insert_into_due_by_table(task_id, due_date):
                 # Check if the task has an active due date
                 cur.execute(select_query)
                 rows = cur.fetchall()
+                update_necessary = True
+                due_date_already_present = False
                 if rows:
                     active_due_date = None
                     for row in rows:
-                        if row['is_active']:
-                            active_due_date = row['due_date']
-                            break
+                        if row["is_active"]:
+                            active_due_date = row["due_date"]
+                        if row["due_date"] == due_date:
+                            due_date_already_present = True
                     # If the new due date is different from the active one, update the active row
                     if active_due_date != due_date:
-                        cur.execute(update_query)
+                        cur.execute(update_deactivate_query) # Deactivate previous old due date
                         msg = "Updated active due date"
-                else:
-                    active_due_date = None
-                # Check if the new due date is already present in the table with is_active = false
-                cur.execute(select_query)
-                rows = cur.fetchall()
-                if rows:
-                    for row in rows:
-                        if not row['is_active'] and row['due_date'] == due_date:
-                            cur.execute(update_query)
-                            msg = f"Updated active due date for task id: {task_id}"
-                # If the new due date is not present, insert a new row
-                else:
-                    cur.execute(insert_query)
-                    msg = "Inserted new due date"
-                conn.commit()
+                    else:
+                        update_necessary = False
+                        msg = "New due date is the same as the active one"
+                # If update is necessary, and due date is already present, activate row
+                if update_necessary:
+                    if due_date_already_present:
+                        cur.execute(update_activate_query)
+                        msg = f"Updated active due date for task id: {task_id}"
+                    # If update is necessary, and new due date is not present, insert a new row
+                    else:
+                        cur.execute(insert_query)
+                        msg = f"Insert new active due date for task id: {task_id}"
+                    conn.commit()
                 return msg
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)

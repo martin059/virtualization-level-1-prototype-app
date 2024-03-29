@@ -33,7 +33,7 @@ def list_due_by_route(task_id):
       else:
          return get_task_due_dates(task_id)
    elif request.method == "POST":
-      return "NOT YET DONE"
+      return post_due_date(task_id, request)
    
 def list_tasks():
    return dba.get_all_tasks()
@@ -83,7 +83,7 @@ def post_due_date(task_id, received_request: request):
       if tmp[1] == 200:
          new_due_date = parse_new_task_request(received_request.get_json())
          response = dba.insert_into_due_by_table(id, new_due_date["due_date"])
-         return jsonify({"new_due_date_id": new_due_date_id}), 201 # TODO take into account the returned message
+         return str(response), 200 # TODO take into account the returned message
       else:
          return tmp[0], tmp[1]
 
@@ -157,7 +157,7 @@ def has_due_date(new_due_date_to_validate: dict):
 
 def parse_new_task_request(received_request: dict):
    parsed_req = {}
-   parsed_req["task_name"] = received_request["task_name"] if isinstance(received_request, dict) else None
+   parsed_req["task_name"] = received_request.get("task_name") if isinstance(received_request, dict) else None
    parsed_req["task_descrip"] = received_request.get("task_descrip") if isinstance(received_request, dict) else None
    parsed_req["creation_date"] = received_request.get("creation_date") if isinstance(received_request, dict) else None
    parsed_req["task_status"] = received_request.get("task_status") if isinstance(received_request, dict) else None
