@@ -72,9 +72,13 @@ def add_task(received_request: request):
    tmp = validate_json(received_request)
    if tmp[1] == 200:
       new_task = parse_received_request(received_request.get_json())
-      new_task_id = dba.insert_into_task_table(new_task["task_name"], new_task["task_descrip"], 
+      response = dba.insert_into_task_table(new_task["task_name"], new_task["task_descrip"], 
                                  new_task["creation_date"], new_task["task_status"], new_task["due_date"])
-      return jsonify({"new_task_id": new_task_id}), 201
+      
+      if not isinstance(response, Exception):
+         return jsonify({"new_task_id": response}), 201
+      else:
+         return jsonify({"error": str(response)}), 400
    else:
       return tmp[0], tmp[1]
 
@@ -127,6 +131,11 @@ def update_task(task_id, received_request: request):
       tmp = validate_json(received_request, False)
       if tmp[1] == 200:
          update_task = parse_received_request(received_request.get_json())
+         
+         if update_task["due_date"] is not None:
+            if not validate_due_date_json(received_request):
+               return jsonify({"error": "A Due Date must have a valid 'due_date' with the 'YYYY-MM-DD' format."}), 400
+         
          response = dba.update_task(id, update_task["task_name"], update_task["task_descrip"], 
                                     update_task["creation_date"], update_task["task_status"], update_task["due_date"])
          if response is None:
