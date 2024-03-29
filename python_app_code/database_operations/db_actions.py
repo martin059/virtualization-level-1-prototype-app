@@ -193,9 +193,27 @@ def delete_task(task_id: str):
         print(error)
         return error
     
-# TODO CHECK IT IF IT WORKS AS EXPECTED !!!!!!!!!!
+
 def insert_into_due_by_table(task_id, due_date):
-    """ Insert or update a due date for a task in the Due_by table """
+    """
+    Insert or update a due date for a task in the Due_by table.
+
+    Parameters:
+    - task_id (int): The ID of the task.
+    - due_date (str): The new due date to be inserted or updated.
+
+    Logic:
+    1. Check if the task has an active due date.
+    2. If there is an active due date and the new due date is different from the active one,
+       update the corresponding row to set 'is_active' to False.
+    3. If the new due date is the same as the active one, end the process.
+    4. Check if the new due date is already present in the table with 'is_active' set to False.
+       If it is, update that row to set 'is_active' to True.
+    5. If the new due date is not present, add a new row with the new due date and set 'is_active' to True.
+    
+    Returns:
+    - str: A message indicating the result of the operation.
+    """
     select_query_base = 'SELECT * FROM app."Due_by" WHERE task_id = {0}'
     select_query = sql.SQL(select_query_base).format(sql.Literal(task_id))
     update_deactivate_query_base = 'UPDATE app."Due_by" SET is_active = false WHERE task_id = {0} AND is_active = true'
