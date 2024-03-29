@@ -219,10 +219,10 @@ def insert_into_due_by_table(task_id, due_date):
                     for row in rows:
                         if row["is_active"]:
                             active_due_date = row["due_date"]
-                        if row["due_date"] == due_date:
+                        if str(row["due_date"]) == due_date:
                             due_date_already_present = True
                     # If the new due date is different from the active one, update the active row
-                    if active_due_date != due_date:
+                    if str(active_due_date) != due_date:
                         cur.execute(update_deactivate_query) # Deactivate previous old due date
                         msg = "Updated active due date"
                     else:
