@@ -25,7 +25,7 @@ def list_tasks_route(task_id = None):
       else:
          return update_task(task_id, request)
    
-@tasks_api.route('/tasks/<task_id>/due-by', methods=['GET', 'POST'])
+@tasks_api.route('/tasks/<task_id>/due-by', methods=['GET', 'POST', 'PUT'])
 def list_due_by_route(task_id):
    if request.method == 'GET':
       if task_id is None:
@@ -34,6 +34,8 @@ def list_due_by_route(task_id):
          return get_task_due_dates(task_id)
    elif request.method == "POST":
       return post_due_date(task_id, request)
+   elif request.method == "PUT":
+      return 'NOT YET DONE'
    
 def list_tasks():
    return dba.get_all_tasks()
@@ -65,7 +67,7 @@ def add_task(received_request: request):
    #The code won't validate if the creation_date or the due_date have a valid format
    tmp = validate_json(received_request)
    if tmp[1] == 200:
-      new_task = parse_new_task_request(received_request.get_json())
+      new_task = parse_received_request(received_request.get_json())
       new_task_id = dba.insert_into_task_table(new_task["task_name"], new_task["task_descrip"], 
                                  new_task["creation_date"], new_task["task_status"], new_task["due_date"])
       return jsonify({"new_task_id": new_task_id}), 201
@@ -81,7 +83,7 @@ def post_due_date(task_id, received_request: request):
    else:
       tmp = validate_due_date_json(received_request)
       if tmp[1] == 200:
-         new_due_date = parse_new_task_request(received_request.get_json())
+         new_due_date = parse_received_request(received_request.get_json())
          response = dba.insert_into_due_by_table(id, new_due_date["due_date"])
 
          if not(isinstance(response, Exception)):
@@ -99,9 +101,29 @@ def update_task(task_id, received_request: request):
    else:
       tmp = validate_json(received_request, False)
       if tmp[1] == 200:
-         update_task = parse_new_task_request(received_request.get_json())
+         update_task = parse_received_request(received_request.get_json())
          response = dba.update_task(id, update_task["task_name"], update_task["task_descrip"], 
                                     update_task["creation_date"], update_task["task_status"], update_task["due_date"])
+         if response is None:
+            return '', 204
+         else:
+            return jsonify({"error": str(response)}), 400
+      else:
+         return tmp[0], tmp[1]
+
+def update_due_date(task_id, received_request: request):
+   # This functions only updates a due task to activate or deactivate it
+   id = int(task_id)
+   task = dba.get_a_task(id)
+   if task is None or len(task) == 0:
+      return jsonify({'error': 'Task with id {} not found'.format(id)}), 404
+   else:
+      tmp = validate_due_date_json(received_request)
+      if tmp[1] == 200:
+         parsed_request = parse_received_request(received_request.get_json())
+         if parsed_request['due_date'] is None:
+            return jsonify({"error": "A due_date must be defined to activate or deactivate."}), 400
+         
          if response is None:
             return '', 204
          else:
@@ -159,7 +181,7 @@ def has_due_date(new_due_date_to_validate: dict):
    # Returns True if the JSON data has a field named "due_date", False otherwise.
    return "due_date" in new_due_date_to_validate
 
-def parse_new_task_request(received_request: dict):
+def parse_received_request(received_request: dict):
    parsed_req = {}
    parsed_req["task_name"] = received_request.get("task_name") if isinstance(received_request, dict) else None
    parsed_req["task_descrip"] = received_request.get("task_descrip") if isinstance(received_request, dict) else None
