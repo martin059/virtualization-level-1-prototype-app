@@ -1,5 +1,6 @@
 from flask import Flask
 from rest_api import tasks_operations_api
+from rest_api import due_by_operations_api
 
 # Imports for testing and debugging:
 from testing import flask_api_ut
@@ -9,6 +10,7 @@ from testing import db_actions_it
 app = Flask(__name__)
 app.register_blueprint(flask_api_ut.basic_flask_api)
 app.register_blueprint(tasks_operations_api.tasks_api)
+app.register_blueprint(due_by_operations_api.due_by_api)
 
 
 def main():
