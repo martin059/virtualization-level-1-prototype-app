@@ -69,6 +69,22 @@ def get_due_by(task_id: str):
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
         return None
+    
+def get_specific_due_by(task_id: str, due_date: str):
+    """ Retrieve a specific due date of a given task from the Due_by table """
+
+    select_query_base = 'SELECT * FROM app."Due_by" WHERE task_id = {0} AND due_date = {1}'
+    select_query = sql.SQL(select_query_base).format(sql.Literal(task_id), sql.Literal(due_date))
+    config  = dbc.load_config()
+    try:
+        with psycopg2.connect(**config) as conn:
+            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+                cur.execute(select_query)
+                return cur.fetchall()
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        return error
 
 def compose_task_insert_update_values(task_name, task_descrip, creation_date, task_status):
     column_names = []
