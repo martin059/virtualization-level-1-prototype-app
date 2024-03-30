@@ -20,15 +20,14 @@ services:
       - "5001:5000"
     volumes:
       - python-code:/code
-#  svelte:
-#    build:
-#      context: ./svelte-app
-#      dockerfile: Dockerfile
-#    command: npm run dev
-#    ports:
-#      - "5002:5000"
-#    volumes:
-#      - svelte-code:/app
+  svelte:
+    build:
+      dockerfile: Dockerfile_svelte
+    command: npm run dev
+    ports:
+      - "5002:8080"
+    volumes:
+      - svelte-code:/app
 
 volumes:
   db:
@@ -39,5 +38,9 @@ volumes:
       type: none
       device: python_app_code
       o: bind
-#  svelte-code:
-#    driver: local
+  svelte-code:
+    driver: local
+    driver_opts:
+      type: none
+      device: svelte_app_code
+      o: bind
