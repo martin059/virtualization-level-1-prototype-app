@@ -11,7 +11,8 @@ services:
     volumes:
       - db:/var/lib/postgresql/data
   python:
-    build: .
+    build: 
+      dockerfile: Dockerfile_python
     command: flask run
     environment:
       - FLASK_DEBUG=true
@@ -19,6 +20,15 @@ services:
       - "5001:5000"
     volumes:
       - code:/code
+#  svelte:
+#    build:
+#      context: ./svelte-app
+#      dockerfile: Dockerfile
+#    command: npm run dev
+#    ports:
+#      - "5002:5000"
+#    volumes:
+#      - svelte-code:/app
 
 volumes:
   db:
@@ -29,3 +39,5 @@ volumes:
       type: none
       device: python_app_code
       o: bind
+#  svelte-code:
+#    driver: local
