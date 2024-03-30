@@ -19,7 +19,7 @@ services:
     ports:
       - "5001:5000"
     volumes:
-      - code:/code
+      - python-code:/code
 #  svelte:
 #    build:
 #      context: ./svelte-app
@@ -33,7 +33,7 @@ services:
 volumes:
   db:
     driver: local
-  code:
+  python-code:
     driver: local
     driver_opts:
       type: none
