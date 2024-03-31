@@ -23,7 +23,7 @@ services:
   svelte:
     build:
       dockerfile: Dockerfile_svelte
-    command: npm run dev
+    command: npm run start
     ports:
       - "5002:8080"
     volumes:
@@ -42,5 +42,5 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: svelte_app_code
+      device: svelte_app_code/vitualization-level-1-prototype-app-svelte
       o: bind

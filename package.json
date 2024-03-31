@@ -1,1 +1,0 @@
-{"scripts": { "build": "vite build", "start": "export PORT=8080 && node ./build" }}
