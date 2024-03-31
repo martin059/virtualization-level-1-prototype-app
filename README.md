@@ -11,9 +11,11 @@ The app itself is a simple web app that is made to run on set of docker containe
 ### To run the app
 
 1. Clone the repository (`git clone <url>`)
-2. Change directory the app (`cd vitualization-level-1-prototype-app`)
-3. Raise the docker container (`docker-compose up -d`)
-4. Execute deploy bash script to set up database structure (`bash <path_to_cloned_repo>/database/deploy_db_design.sh`)
+2. Change directory to the front-end service (`cd vitualization-level-1-prototype-app/svelte_app_code/vitualization-level-1-prototype-app-svelte/`)
+3. Get initial build for the front-end service that the service will later require while building the image (`npm install`)
+4. Go back to the main directory (`cd ../..` or `cd <path_to_cloned_repo>/vitualization-level-1-prototype-app`)
+5. Raise the docker containers (`docker-compose up -d`)
+6. Execute deploy bash script to set up database structure (`bash <path_to_cloned_repo>/database/deploy_db_design.sh`)
 
 ## Testing
 
