@@ -21,5 +21,5 @@ if __name__ == "__main__":
     main()
     
     # Uncomment the following line to enable launch of Integration Tests between python and postgres containers
-    # db_actions_it.initial_testing_console()
+    db_actions_it.initial_testing_console()
     
