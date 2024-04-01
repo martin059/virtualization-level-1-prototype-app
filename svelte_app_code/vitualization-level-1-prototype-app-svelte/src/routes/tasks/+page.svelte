@@ -4,7 +4,7 @@
         id: number;
         task_name: string;
         task_descrip: string;
-        creation_date: string;
+        creation_date: Date;
         task_status: 'Created' | 'Done' | 'Deleted' | 'Dropped' | 'Postponed';
     }
 
@@ -23,9 +23,36 @@
 </script>
 
 <h1>Task List</h1>
+<div>
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Creation Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {#each tasks as task (task.id)}
+                <tr>
+                    <td>{task.id}</td>
+                    <td>{task.task_name}</td>
+                    <td>{task.task_descrip}</td>
+                    <td>{task.creation_date}</td>
+                    <td>{task.task_status}</td>
+                </tr>
+            {/each}
+        </tbody>
+    </table>
+</div>
 
-<ul>
-    {#each tasks as task (task.id)}
-        <li>{task.id} - {task.task_name} - {task.task_descrip} - {task.creation_date} - {task.task_status}</li>
-    {/each}
-</ul>
+<style>
+    div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+</style>
