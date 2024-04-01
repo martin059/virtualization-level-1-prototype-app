@@ -1,4 +1,6 @@
 <script lang="ts">
+    // ideas https://svelte.dev/examples/hello-world
+    // https://colorlib.com/wp/template/responsive-table-v2/
     import { onMount } from 'svelte';
     interface Task {
         id: number;
@@ -40,7 +42,7 @@
                     <td>{task.id}</td>
                     <td>{task.task_name}</td>
                     <td>{task.task_descrip}</td>
-                    <td>{task.creation_date}</td>
+                    <td>{new Date(task.creation_date).toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: '2-digit' })}</td>
                     <td>{task.task_status}</td>
                 </tr>
             {/each}
@@ -54,5 +56,13 @@
         justify-content: center;
         align-items: center;
         height: 100vh;
+    }
+    table {
+        border-collapse: collapse;
+    }
+
+    th, td {
+        border: 1px solid black;
+        padding: 8px;
     }
 </style>
