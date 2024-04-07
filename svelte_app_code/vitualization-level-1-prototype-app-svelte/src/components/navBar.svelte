@@ -34,7 +34,7 @@
 
 <main>
     <Navbar color="light" light expand="md">
-        <Nav tabs>
+        <Nav vertical pills>
             {#each navItems as item}
                 <NavItem>
                     <NavLink active={activeTab === item.label} href={item.href} on:click={() => handleTabClick(item.label)} title={item.title}>

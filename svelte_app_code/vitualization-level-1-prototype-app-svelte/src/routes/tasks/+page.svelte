@@ -24,9 +24,8 @@
     });
 </script>
 
-<NavBar />
-
 <main>
+    <NavBar />
     <h1>Task List</h1>
     {#if isLoading}
         <LoadingSpinner />
@@ -57,6 +56,7 @@
         </div>
     {/if}
 </main>
+
 <style>
     div {
         display: flex;
