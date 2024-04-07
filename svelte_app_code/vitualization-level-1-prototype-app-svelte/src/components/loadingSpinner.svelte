@@ -1,4 +1,6 @@
-<div class="loading-spinner"></div>
+<main>
+    <div class="loading-spinner"></div>
+</main>
 
 <style>
     .loading-spinner {

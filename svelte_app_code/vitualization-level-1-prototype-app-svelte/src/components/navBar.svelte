@@ -32,14 +32,16 @@
     }
 </script>
 
-<Navbar color="light" light expand="md">
-    <Nav tabs>
-        {#each navItems as item}
-            <NavItem>
-                <NavLink active={activeTab === item.label} on:click={() => handleTabClick(item.label)}>
-                    {item.title}
-                </NavLink>
-            </NavItem>
-        {/each}
-    </Nav>
-</Navbar>
+<main>
+    <Navbar color="light" light expand="md">
+        <Nav tabs>
+            {#each navItems as item}
+                <NavItem>
+                    <NavLink active={activeTab === item.label} on:click={() => handleTabClick(item.label)}>
+                        {item.title}
+                    </NavLink>
+                </NavItem>
+            {/each}
+        </Nav>
+    </Navbar>
+</main>
