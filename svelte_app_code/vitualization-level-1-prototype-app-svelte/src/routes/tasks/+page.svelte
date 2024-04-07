@@ -1,6 +1,6 @@
 <script lang="ts">
     // ideas https://svelte.dev/examples/hello-world
-    // https://colorlib.com/wp/template/responsive-table-v2/
+    // https://colorlib.com/wp/template/responsive-table-v2/ or https://colorlib.com/wp/template/fixed-header-table/
     // sveltestrap doc https://sveltestrap.js.org/?path=%2Fdocs%2Fsveltestrap-overview--docs
     import { onMount } from 'svelte';
     import NavBar from "@components/navBar.svelte";
