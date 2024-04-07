@@ -1,5 +1,7 @@
-<script>
-    export let name = 'Svelte Front End App';
+<script lang="ts">
+    // @ts-ignore
+    import NavBar from "@components/navBar.svelte";
+    export let name: string = 'Svelte Front End App';
 </script>
 
 <style>
@@ -22,7 +24,7 @@
         list-style-position: inside;
     }
 </style>
-
+<NavBar />
 <main>
     <h1>About { name }</h1>
     <p>Welcome to the about page of { name }! This application is meant to serve as the Front End for the main App which consist of a ToDo app.</p>
