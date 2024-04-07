@@ -5,22 +5,34 @@
     import { navigate } from 'svelte-routing';
 
     let routeId: string = $page.route.id ?? '';
-    let activeTab = 'task';
+    let activeTab: string;
 
     onMount(() => {
-        console.log('routeId:', routeId);
+        switch (routeId) {
+            case '/':
+                activeTab = 'home';
+                break;
+            case '/tasks':
+                activeTab = 'tasks';
+                break;
+            case '/about':
+                activeTab = 'about';
+                break;
+        }
     });
 
     function handleTabClick(tab: string) {
         activeTab = tab;
-        if (tab === 'home') {
-            navigate('/');
-        }
-        if (tab === 'about') {
-            navigate('/about');
-        }
-        if (tab === 'tasks') {
-            navigate('/tasks');
+        switch (tab) {
+            case 'home':
+                navigate('/');
+                break;
+            case 'about':
+                navigate('/about');
+                break;
+            case 'tasks':
+                navigate('/tasks');
+                break;
         }
     }
 </script>
@@ -43,15 +55,4 @@
             </NavLink>
         </NavItem>
     </Nav>
-    <TabContent activeTab={activeTab}>
-        <TabPane tabId="home">
-            <!-- Content for the 'Home' tab -->
-        </TabPane>
-        <TabPane tabId="task">
-            <!-- Content for the 'Task' tab -->
-        </TabPane>
-        <TabPane tabId="about">
-            <!-- Content for the 'About' tab -->
-        </TabPane>
-    </TabContent>
 </Navbar>
