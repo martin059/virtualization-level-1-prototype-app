@@ -23,38 +23,40 @@
         }
     });
 </script>
+
 <NavBar />
 
-<h1>Task List</h1>
-{#if isLoading}
-    <LoadingSpinner />
-{:else}
-    <div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Creation Date</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                {#each tasks as task (task.id)}
+<main>
+    <h1>Task List</h1>
+    {#if isLoading}
+        <LoadingSpinner />
+    {:else}
+        <div>
+            <table>
+                <thead>
                     <tr>
-                        <td>{task.id}</td>
-                        <td>{task.task_name}</td>
-                        <td>{task.task_descrip}</td>
-                        <td>{new Date(task.creation_date).toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: '2-digit' })}</td>
-                        <td>{task.task_status}</td>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Creation Date</th>
+                        <th>Status</th>
                     </tr>
-                {/each}
-            </tbody>
-        </table>
-    </div>
-{/if}
-
+                </thead>
+                <tbody>
+                    {#each tasks as task (task.id)}
+                        <tr>
+                            <td>{task.id}</td>
+                            <td>{task.task_name}</td>
+                            <td>{task.task_descrip}</td>
+                            <td>{new Date(task.creation_date).toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: '2-digit' })}</td>
+                            <td>{task.task_status}</td>
+                        </tr>
+                    {/each}
+                </tbody>
+            </table>
+        </div>
+    {/if}
+</main>
 <style>
     div {
         display: flex;

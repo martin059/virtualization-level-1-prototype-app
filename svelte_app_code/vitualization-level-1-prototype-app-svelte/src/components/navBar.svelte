@@ -37,7 +37,7 @@
         <Nav tabs>
             {#each navItems as item}
                 <NavItem>
-                    <NavLink active={activeTab === item.label} on:click={() => handleTabClick(item.label)}>
+                    <NavLink active={activeTab === item.label} href={item.href} on:click={() => handleTabClick(item.label)} title={item.title}>
                         {item.title}
                     </NavLink>
                 </NavItem>
