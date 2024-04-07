@@ -1,7 +1,10 @@
-<script>
+<script lang="ts">
 // @ts-nocheck
-  import { Button, Col, Row } from '@sveltestrap/sveltestrap';
+  import { Button, Col, Row } from 'sveltestrap';
+  import NavBar from "../lib/navBar.svelte";
 </script>
+
+<NavBar />
 
 <h1>Hello World to the Front end app!</h1>
 <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
