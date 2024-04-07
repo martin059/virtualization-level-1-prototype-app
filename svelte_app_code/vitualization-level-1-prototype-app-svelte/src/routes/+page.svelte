@@ -1,6 +1,6 @@
 <script lang="ts">
 // @ts-nocheck
-  import { Button, Col, Row } from '@sveltestrap/sveltestrap';
+  import { Button, Col, Row } from 'sveltestrap';
   import NavBar from "../lib/navBar.svelte";
 </script>
 
