@@ -2,7 +2,7 @@
     import { Navbar, Nav, NavItem, NavLink } from '@sveltestrap/sveltestrap';
     import { onMount } from 'svelte';
     import { page } from '$app/stores';
-    import { navigate } from 'svelte-routing';
+    import { goto } from '$app/navigation';
     import { NavObject } from '@models/NavObject';
 
     let routeId: string = $page.route.id ?? '';
@@ -26,7 +26,7 @@
         activeTab = tab;
         navItems.forEach((item) => {
             if (tab === item.label) {
-                navigate(item.href);
+                goto(item.href);
             }
         });
     }
