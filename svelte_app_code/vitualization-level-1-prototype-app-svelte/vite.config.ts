@@ -8,7 +8,8 @@ export default defineConfig({
 		sveltekit(),
 		alias({
 			entries: [
-				{ find: '@components', replacement: path.resolve(__dirname, 'src/components') }
+				{ find: '@components', replacement: path.resolve(__dirname, 'src/components') },
+				{ find: '@models', replacement: path.resolve(__dirname, 'src/models') }
 			]
 		})
 	]
