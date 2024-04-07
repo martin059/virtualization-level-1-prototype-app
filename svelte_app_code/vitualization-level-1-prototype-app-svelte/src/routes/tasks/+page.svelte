@@ -4,13 +4,7 @@
     // sveltestrap doc https://sveltestrap.js.org/?path=%2Fdocs%2Fsveltestrap-overview--docs
     import { onMount } from 'svelte';
     import NavBar from "@components/navBar.svelte";
-    interface Task {
-        id: number;
-        task_name: string;
-        task_descrip: string;
-        creation_date: Date;
-        task_status: 'Created' | 'Done' | 'Deleted' | 'Dropped' | 'Postponed';
-    }
+    import type { Task } from "@models/Task";
 
     let response: any;
     let tasks: Task[] = [];

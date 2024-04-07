@@ -1,6 +1,6 @@
 /**
-* Represents a navigation object with a title and a href.
-*/
+ * Represents a navigation object with a title and a href.
+ */
 export class NavObject {
     /**
      * Creates a new NavObject instance.
@@ -10,10 +10,9 @@ export class NavObject {
     constructor(public title: string, public href: string) {}
 
     /**
-     * Returns the lowercase version of the title.
-     * @returns The lowercase version of the title.
+     * Gets the lowercase value of the title.
      */
-    getLowerCaseTitle(): string {
+    get label(): string {
         return this.title.toLowerCase();
     }
 }

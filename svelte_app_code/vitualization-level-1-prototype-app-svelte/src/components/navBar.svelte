@@ -1,58 +1,45 @@
 <script lang="ts">
-    import { Navbar, Nav, NavItem, NavLink, TabContent, TabPane } from '@sveltestrap/sveltestrap';
+    import { Navbar, Nav, NavItem, NavLink } from '@sveltestrap/sveltestrap';
     import { onMount } from 'svelte';
     import { page } from '$app/stores';
     import { navigate } from 'svelte-routing';
+    import { NavObject } from '@models/NavObject';
 
     let routeId: string = $page.route.id ?? '';
     let activeTab: string;
 
+    let navItems: NavObject[] = [
+        new NavObject('Home', '/'),
+        new NavObject('Tasks', '/tasks'),
+        new NavObject('About', '/about')
+    ];
+
     onMount(() => {
-        switch (routeId) {
-            case '/':
-                activeTab = 'home';
-                break;
-            case '/tasks':
-                activeTab = 'tasks';
-                break;
-            case '/about':
-                activeTab = 'about';
-                break;
-        }
+        navItems.forEach((item) => {
+            if (routeId === item.href) {
+                activeTab = item.label;
+            }
+        });
     });
 
     function handleTabClick(tab: string) {
         activeTab = tab;
-        switch (tab) {
-            case 'home':
-                navigate('/');
-                break;
-            case 'about':
-                navigate('/about');
-                break;
-            case 'tasks':
-                navigate('/tasks');
-                break;
-        }
+        navItems.forEach((item) => {
+            if (tab === item.label) {
+                navigate(item.href);
+            }
+        });
     }
 </script>
 
 <Navbar color="light" light expand="md">
     <Nav tabs>
-        <NavItem>
-            <NavLink active={activeTab === 'home'} on:click={() => handleTabClick('home')}>
-                Home
-            </NavLink>
-        </NavItem>
-        <NavItem>
-            <NavLink active={activeTab === 'tasks'} on:click={() => handleTabClick('tasks')}>
-                Tasks
-            </NavLink>
-        </NavItem>
-        <NavItem>
-            <NavLink active={activeTab === 'about'} on:click={() => handleTabClick('about')}>
-                About
-            </NavLink>
-        </NavItem>
+        {#each navItems as item}
+            <NavItem>
+                <NavLink active={activeTab === item.label} on:click={() => handleTabClick(item.label)}>
+                    {item.title}
+                </NavLink>
+            </NavItem>
+        {/each}
     </Nav>
 </Navbar>
