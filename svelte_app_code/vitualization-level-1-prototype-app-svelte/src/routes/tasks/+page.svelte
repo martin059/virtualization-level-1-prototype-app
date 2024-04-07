@@ -3,6 +3,7 @@
     // https://colorlib.com/wp/template/responsive-table-v2/
     // sveltestrap doc https://sveltestrap.js.org/?path=%2Fdocs%2Fsveltestrap-overview--docs
     import { onMount } from 'svelte';
+    import NavBar from "@components/navBar.svelte";
     interface Task {
         id: number;
         task_name: string;
@@ -24,6 +25,7 @@
         }
     });
 </script>
+<NavBar />
 
 <h1>Task List</h1>
 <div>
