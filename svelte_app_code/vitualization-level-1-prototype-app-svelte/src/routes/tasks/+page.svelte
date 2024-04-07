@@ -4,6 +4,7 @@
     // sveltestrap doc https://sveltestrap.js.org/?path=%2Fdocs%2Fsveltestrap-overview--docs
     import { onMount } from 'svelte';
     import NavBar from "@components/navBar.svelte";
+    import LoadingSpinner from '@components/loadingSpinner.svelte';
     import type { Task } from "@models/Task";
 
     let response: any;
@@ -26,7 +27,7 @@
 
 <h1>Task List</h1>
 {#if isLoading}
-    <div class="loading-spinner"></div>
+    <LoadingSpinner />
 {:else}
     <div>
         <table>
@@ -68,20 +69,5 @@
     th, td {
         border: 1px solid black;
         padding: 8px;
-    }
-
-    .loading-spinner {
-        border: 16px solid #f3f3f3;
-        border-top: 16px solid #3498db;
-        border-radius: 50%;
-        width: 120px;
-        height: 120px;
-        animation: spin 2s linear infinite;
-        margin: auto;
-    }
-
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
     }
 </style>
