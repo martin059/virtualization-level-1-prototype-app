@@ -5,6 +5,7 @@
     import { onMount } from 'svelte';
     import { Col, NavBar } from "@components/commonComponents";
     import { Table } from '@sveltestrap/sveltestrap';
+    // TODO https://sveltestrap.js.org/?path=%2Fdocs%2Fcontent-tables--docs
     import LoadingSpinner from '@components/loadingSpinner.svelte';
     import type { Task } from "@models/Task";
 
