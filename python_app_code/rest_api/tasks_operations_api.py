@@ -94,7 +94,7 @@ def add_task(received_request: request) -> jsonify:
       try:
          response = dba.insert_into_task_table(new_task["task_name"], new_task["task_descrip"], 
                               new_task["creation_date"], new_task["task_status"], new_task["due_date"])
-         return jsonify({"new_task_id": response}), 201
+         return jsonify({"new_task_id": response}), 201, {'Access-Control-Allow-Origin': '*'}
       except Exception as e:
          return jsonify({'error': str(e)}), 500
      
