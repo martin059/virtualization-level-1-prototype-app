@@ -1,6 +1,11 @@
 <script lang="ts">
 // @ts-nocheck
   import {Col, Row, NavBar, Button} from "@components/commonComponents";
+  /*
+  DOCUMENTATION TO READ:
+  https://kit.svelte.dev/docs/form-actions
+  https://sveltestrap.js.org/?path=%2Fdocs%2Fform-formgroup--docs
+  */
 </script>
 
 <main class="d-flex flex-row full-height">
