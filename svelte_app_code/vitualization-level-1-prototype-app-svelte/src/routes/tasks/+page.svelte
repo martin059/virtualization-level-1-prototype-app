@@ -1,15 +1,13 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    interface Task {
-        id: number;
-        task_name: string;
-        task_descrip: string;
-        creation_date: string;
-        task_status: 'Created' | 'Done' | 'Deleted' | 'Dropped' | 'Postponed';
-    }
+    import { Col, NavBar } from "@components/commonComponents";
+    import { Table } from '@sveltestrap/sveltestrap';
+    import LoadingSpinner from '@components/loadingSpinner.svelte';
+    import type { Task } from "@models/Task";
 
     let response: any;
     let tasks: Task[] = [];
+    let isLoading = true;
 
     onMount(async () => {
         try {
@@ -18,14 +16,52 @@
             tasks = response as Task[];
         } catch (error) {
             console.error(error);
+        } finally {
+            isLoading = false;
         }
     });
 </script>
 
-<h1>Task List</h1>
+<main class="d-flex flex-row full-height">
+    <Col class="col-1">
+        <NavBar />
+    </Col>
+    <Col class="col-11 d-flex align-items-center flex-column">
+        <h1>Task List</h1>
+        {#if isLoading}
+            <LoadingSpinner />
+        {:else}
+            <div class="full-height centered filling-div">
+                <div class="table-div table-striped">
+                    <Table striped hover bordered>
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Creation Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {#each tasks as task (task.id)}
+                                <tr>
+                                    <th scope="row">{task.id}</th>
+                                    <td>{task.task_name}</td>
+                                    <td>{task.task_descrip}</td>
+                                    <td>{new Date(task.creation_date).toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: '2-digit' })}</td>
+                                    <td>{task.task_status}</td>
+                                </tr>
+                            {/each}
+                        </tbody>
+                    </Table>
+                </div>
+            </div>
+        {/if}
+    </Col>
+</main>
 
-<ul>
-    {#each tasks as task (task.id)}
-        <li>{task.id} - {task.task_name} - {task.task_descrip} - {task.creation_date} - {task.task_status}</li>
-    {/each}
-</ul>
+<style>
+    .filling-div { width: 100%;height: 100%;}
+    .table-div { width: 90%; }
+</style>
