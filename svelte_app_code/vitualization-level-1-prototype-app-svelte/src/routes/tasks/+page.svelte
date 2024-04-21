@@ -1,11 +1,7 @@
 <script lang="ts">
-    // ideas https://svelte.dev/examples/hello-world
-    // https://colorlib.com/wp/template/responsive-table-v2/ or https://colorlib.com/wp/template/fixed-header-table/
-    // sveltestrap doc https://sveltestrap.js.org/?path=%2Fdocs%2Fsveltestrap-overview--docs
     import { onMount } from 'svelte';
     import { Col, NavBar } from "@components/commonComponents";
     import { Table } from '@sveltestrap/sveltestrap';
-    // TODO https://sveltestrap.js.org/?path=%2Fdocs%2Fcontent-tables--docs
     import LoadingSpinner from '@components/loadingSpinner.svelte';
     import type { Task } from "@models/Task";
 
@@ -35,47 +31,37 @@
         {#if isLoading}
             <LoadingSpinner />
         {:else}
-            <div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th>Creation Date</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {#each tasks as task (task.id)}
+            <div class="full-height centered filling-div">
+                <div class="table-div table-striped">
+                    <Table striped hover bordered>
+                        <thead>
                             <tr>
-                                <td>{task.id}</td>
-                                <td>{task.task_name}</td>
-                                <td>{task.task_descrip}</td>
-                                <td>{new Date(task.creation_date).toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: '2-digit' })}</td>
-                                <td>{task.task_status}</td>
+                                <th>Id</th>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Creation Date</th>
+                                <th>Status</th>
                             </tr>
-                        {/each}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {#each tasks as task (task.id)}
+                                <tr>
+                                    <th scope="row">{task.id}</th>
+                                    <td>{task.task_name}</td>
+                                    <td>{task.task_descrip}</td>
+                                    <td>{new Date(task.creation_date).toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: '2-digit' })}</td>
+                                    <td>{task.task_status}</td>
+                                </tr>
+                            {/each}
+                        </tbody>
+                    </Table>
+                </div>
             </div>
         {/if}
     </Col>
 </main>
 
 <style>
-    div {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-    }
-    table {
-        border-collapse: collapse;
-    }
-
-    th, td {
-        border: 1px solid black;
-        padding: 8px;
-    }
+    .filling-div { width: 100%;height: 100%;}
+    .table-div { width: 90%; }
 </style>
