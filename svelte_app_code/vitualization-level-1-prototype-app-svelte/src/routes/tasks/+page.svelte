@@ -1,9 +1,10 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { Col, NavBar } from "@components/commonComponents";
+    import { Col, NavBar, Button } from "@components/commonComponents";
     import { Table } from '@sveltestrap/sveltestrap';
     import LoadingSpinner from '@components/loadingSpinner.svelte';
     import type { Task } from "@models/Task";
+    import { goto } from '$app/navigation';
 
     let response: any;
     let tasks: Task[] = [];
@@ -20,6 +21,10 @@
             isLoading = false;
         }
     });
+
+    function gotToNewTaskForm() {
+        goto('/tasks/new');
+    }
 </script>
 
 <main class="d-flex flex-row full-height">
@@ -33,7 +38,7 @@
         {:else}
             <div class="full-height centered filling-div">
                 <div class="table-div table-striped">
-                    <Table striped hover bordered>
+                    <Table striped hover rounded>
                         <thead>
                             <tr>
                                 <th>Id</th>
@@ -55,6 +60,9 @@
                             {/each}
                         </tbody>
                     </Table>
+                    <div class="button-div">
+                        <Button color="primary" block on:click={() => gotToNewTaskForm()}>Create new Task</Button>
+                    </div>
                 </div>
             </div>
         {/if}

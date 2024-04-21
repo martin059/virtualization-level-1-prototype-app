@@ -3,6 +3,6 @@
  */
 
 import NavBar from "@components/navBar.svelte";
-import { Col, Row } from '@sveltestrap/sveltestrap';
+import { Col, Row, Button } from '@sveltestrap/sveltestrap';
 
-export { NavBar, Col, Row };
+export { NavBar, Col, Row, Button };

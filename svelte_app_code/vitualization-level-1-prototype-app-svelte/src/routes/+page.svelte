@@ -1,7 +1,6 @@
 <script lang="ts">
 // @ts-nocheck
-  import { Button } from '@sveltestrap/sveltestrap';
-  import {Col, Row, NavBar} from "@components/commonComponents";
+  import {Col, Row, NavBar, Button} from "@components/commonComponents";
 </script>
 
 <main class="d-flex flex-row full-height">
