@@ -38,7 +38,7 @@
         {:else}
             <div class="full-height centered filling-div">
                 <div class="table-div table-striped">
-                    <Table striped hover rounded>
+                    <Table striped hover>
                         <thead>
                             <tr>
                                 <th>Id</th>
