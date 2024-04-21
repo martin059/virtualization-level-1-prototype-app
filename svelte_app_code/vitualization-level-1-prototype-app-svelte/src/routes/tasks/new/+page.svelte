@@ -2,6 +2,7 @@
 // @ts-nocheck
   import {Col, Row, NavBar, Button} from "@components/commonComponents";
   /*
+  TODO remove this comment later
   DOCUMENTATION TO READ:
   https://kit.svelte.dev/docs/form-actions
   https://sveltestrap.js.org/?path=%2Fdocs%2Fform-formgroup--docs
