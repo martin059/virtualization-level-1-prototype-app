@@ -60,7 +60,7 @@
                             {/each}
                         </tbody>
                     </Table>
-                    <div class="button-div">
+                    <div>
                         <Button color="primary" block on:click={() => gotToNewTaskForm()}>Create new Task</Button>
                     </div>
                 </div>
