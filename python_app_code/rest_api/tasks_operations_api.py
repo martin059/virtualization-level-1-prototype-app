@@ -49,7 +49,7 @@ def list_tasks() -> jsonify:
       jsonify: A list of tasks.
    """
    try:
-      return jsonify(dba.get_all_tasks()), 200, {'Access-Control-Allow-Origin': '*'}
+      return jsonify(dba.get_all_tasks()), 200
    except Exception as e:
       return jsonify({'error': str(e)}), 500
 
@@ -94,7 +94,7 @@ def add_task(received_request: request) -> jsonify:
       try:
          response = dba.insert_into_task_table(new_task["task_name"], new_task["task_descrip"], 
                               new_task["creation_date"], new_task["task_status"], new_task["due_date"])
-         return jsonify({"new_task_id": response}), 201, {'Access-Control-Allow-Origin': '*'}
+         return jsonify({"new_task_id": response}), 201
       except Exception as e:
          return jsonify({'error': str(e)}), 500
      

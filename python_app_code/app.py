@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 from rest_api import tasks_operations_api
 from rest_api import due_by_operations_api
 
@@ -11,6 +12,7 @@ app = Flask(__name__)
 app.register_blueprint(flask_api_ut.basic_flask_api)
 app.register_blueprint(tasks_operations_api.tasks_api)
 app.register_blueprint(due_by_operations_api.due_by_api)
+CORS(app)
 
 
 def main():
