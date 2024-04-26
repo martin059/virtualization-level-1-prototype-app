@@ -24,6 +24,8 @@
     const response = await res.json();
     console.log(response);
   }
+
+  // TODO  add a notification banner or a toast to show the user that the task was created successfully and redirect to the tasks page
 </script>
 
 <main class="d-flex flex-row full-height">
