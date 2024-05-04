@@ -56,6 +56,7 @@
                                     <td>{task.task_descrip}</td>
                                     <td>{new Date(task.creation_date).toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: '2-digit' })}</td>
                                     <td>{task.task_status}</td>
+                                    <td><Button color="info" on:click={() => goto(`/tasks/${task.id}`)}>View</Button></td>
                                 </tr>
                             {/each}
                         </tbody>
