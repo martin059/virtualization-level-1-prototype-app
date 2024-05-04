@@ -3,6 +3,7 @@
     import { Col, NavBar, Button } from "@components/commonComponents";
     import { Table } from '@sveltestrap/sveltestrap';
     import LoadingSpinner from '@components/loadingSpinner.svelte';
+    import { Notifications, acts } from '@tadashi/svelte-notification'
     import type { Task } from "@models/Task";
     import { goto } from '$app/navigation';
 
@@ -16,6 +17,7 @@
             response = await res.json();
             tasks = response as Task[];
         } catch (error) {
+            acts.add({ mode: 'error', message: 'Something went wrong, for more info consult the console.' });
             console.error(error);
         } finally {
             isLoading = false;
@@ -33,6 +35,7 @@
     </Col>
     <Col class="col-11 d-flex align-items-center flex-column">
         <h1>Task List</h1>
+        <Notifications />
         {#if isLoading}
             <LoadingSpinner />
         {:else}

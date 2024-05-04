@@ -1,8 +1,8 @@
 <script lang="ts">
 // @ts-nocheck
-  import {Col, NavBar, Button} from "@components/commonComponents";
-  import {Notifications, acts} from '@tadashi/svelte-notification'
-  import type {Task} from "@models/Task";
+  import { Col, NavBar, Button } from "@components/commonComponents";
+  import { Notifications, acts } from '@tadashi/svelte-notification'
+  import type { Task } from "@models/Task";
   import { onMount } from "svelte";
    import { goto } from "$app/navigation";
 
