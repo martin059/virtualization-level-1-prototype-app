@@ -49,7 +49,7 @@ def list_tasks() -> jsonify:
       jsonify: A list of tasks.
    """
    try:
-      return jsonify(dba.get_all_tasks()), 200, {'Access-Control-Allow-Origin': '*'}
+      return jsonify(dba.get_all_tasks()), 200
    except Exception as e:
       return jsonify({'error': str(e)}), 500
 

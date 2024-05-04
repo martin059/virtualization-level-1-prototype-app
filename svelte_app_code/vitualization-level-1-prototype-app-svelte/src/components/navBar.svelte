@@ -16,7 +16,9 @@
 
     onMount(() => {
         navItems.forEach((item) => {
-            if (routeId === item.href) {
+            if ((routeId === '/' || routeId === '') && item.href === '/'){
+                activeTab = item.label;
+            } else if (routeId.includes(item.href)) {
                 activeTab = item.label;
             }
         });
