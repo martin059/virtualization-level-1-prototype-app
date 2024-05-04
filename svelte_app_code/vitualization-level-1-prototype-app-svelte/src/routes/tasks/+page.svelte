@@ -8,7 +8,7 @@
 
     let response: any;
     let tasks: Task[] = [];
-    let isLoading = true;
+    let isLoading: boolean = true;
 
     onMount(async () => {
         try {
