@@ -1,31 +1,47 @@
 <script lang="ts">
 // @ts-nocheck
-  import {Col, Row, NavBar, Button} from "@components/commonComponents";
+  import {Col, NavBar, Button} from "@components/commonComponents";
+  import {Notifications, acts} from '@tadashi/svelte-notification'
   import type {Task} from "@models/Task";
-  /*
-  TODO remove this comment later
-  DOCUMENTATION TO READ:
-  https://kit.svelte.dev/docs/form-actions
-  https://sveltestrap.js.org/?path=%2Fdocs%2Fform-formgroup--docs
-  */
+  import { onMount } from "svelte";
+   import { goto } from "$app/navigation";
 
   // By default, the new task is created with the status 'Created'
   let newTask: Task = { task_name: '', task_descrip: '', task_status: 'Created' };
+  let submitEnabled: boolean;
+
+  onMount(() => {
+    submitEnabled = true;
+  });
 
   async function handleSubmit() {
-    console.log(newTask);
-    const res = await fetch('http://localhost:5001/tasks', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(newTask)
-    });
-    const response = await res.json();
-    console.log(response);
+    if (submitEnabled){
+      submitEnabled = false;
+      const res = await fetch('http://localhost:5001/tasks', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newTask),
+        timeout: 10000 // 10 seconds
+      });
+      const response = await res.json();
+      const statusCode = res.status;
+      if (statusCode >= 200 && statusCode < 300) {
+        acts.add({ mode: 'success', message: 'Task created successfully. Redirecting to task page...' });
+        await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds so user can read message
+        goto('/tasks');
+      } else {
+        acts.add({ mode: 'error', message: 'Something went wrong, for more info consult the console.' });
+      }
+      console.log(response);
+      submitEnabled = true;
+    } else {
+      acts.add({ mode: 'warn', message: 'Wait until a response is returned.', lifetime: 3 });
+    }
+
   }
 
-  // TODO  add a notification banner or a toast to show the user that the task was created successfully and redirect to the tasks page
 </script>
 
 <main class="d-flex flex-row full-height">
@@ -34,6 +50,7 @@
   </Col>
   <Col class="col-11 d-flex align-items-center flex-column">
     <h1>New Task</h1>
+    <Notifications />
       <Col class="col-6">
         <form on:submit|preventDefault={handleSubmit}>
           <div class="mb-3">
@@ -62,4 +79,7 @@
 </main>
 
 <style>
+  :root {
+    --tadashi_svelte_notifications_width: 500px;
+  }
 </style>
