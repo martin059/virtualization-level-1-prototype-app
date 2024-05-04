@@ -15,31 +15,41 @@
   });
 
   async function handleSubmit() {
-    if (submitEnabled){
-      submitEnabled = false;
-      const res = await fetch('http://localhost:5001/tasks', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newTask),
-        timeout: 10000 // 10 seconds
-      });
-      const response = await res.json();
-      const statusCode = res.status;
-      if (statusCode >= 200 && statusCode < 300) {
-        acts.add({ mode: 'success', message: 'Task created successfully. Redirecting to task page...' });
-        await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds so user can read message
-        goto('/tasks');
+    if(isTaskNameValid()) {
+      if (submitEnabled){
+        submitEnabled = false;
+        const res = await fetch('http://localhost:5001/tasks', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(newTask),
+          timeout: 10000 // 10 seconds
+        });
+        const response = await res.json();
+        const statusCode = res.status;
+        if (statusCode >= 200 && statusCode < 300) {
+          acts.add({ mode: 'success', message: 'Task created successfully. Redirecting to task page...', lifetime: 2});
+          await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds so user can read message
+          goto('/tasks');
+        } else {
+          acts.add({ mode: 'error', message: 'Something went wrong, for more info consult the console.' });
+        }
+        console.log(response);
+        submitEnabled = true;
       } else {
-        acts.add({ mode: 'error', message: 'Something went wrong, for more info consult the console.' });
+        acts.add({ mode: 'warn', message: 'Wait until a response is returned.', lifetime: 3 });
       }
-      console.log(response);
-      submitEnabled = true;
-    } else {
-      acts.add({ mode: 'warn', message: 'Wait until a response is returned.', lifetime: 3 });
     }
+  }
 
+  function isTaskNameValid(): boolean {
+    if (newTask.task_name.trim() === '') {
+      acts.add({ mode: 'error', message: 'Task name must not be empty.', lifetime: 3 });
+      return false;
+    } else {
+      return true;
+    }
   }
 
 </script>
@@ -54,7 +64,7 @@
       <Col class="col-6">
         <form on:submit|preventDefault={handleSubmit}>
           <div class="mb-3">
-            <label for="task_name" class="form-label">Task Name</label>
+            <label for="task_name" class="form-label">Task Name*</label>
             <input type="text" class="form-control" id="task_name" bind:value={newTask.task_name}/>
           </div>
           <div class="mb-3">
@@ -71,7 +81,7 @@
             </select>
           </div>
           <div>
-            <Button type="submit" block>Submit New Task</Button>
+            <Button type="submit" color="primary" block>Submit New Task</Button>
           </div>
         </form>
       </Col>
