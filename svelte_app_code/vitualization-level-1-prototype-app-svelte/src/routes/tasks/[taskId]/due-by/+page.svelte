@@ -11,9 +11,10 @@
     let taskId: string | null = $page.params.taskId;
     let response: any;
     let dueDates: DueDate[] = [];
+    let updateInProgress: boolean = false;
     let isLoading: boolean = true;
 
-    onMount(async () => {
+    async function fetchData() {
         try {
             const res = await fetch('http://localhost:5001/tasks/' + taskId + '/due-by');
             const statusCode = res.status;
@@ -31,10 +32,15 @@
         } finally {
             isLoading = false;
         }
-    });
+    }
 
+    onMount(fetchData);
 
     async function toggleDueDateActivation(toggledDueDate: DueDate) {  
+    if (updateInProgress) {
+        acts.add({ mode: 'warn', message: 'Wait until a response is returned.', lifetime: 3 });
+        return;
+    } else { updateInProgress = true; }
     toggledDueDate.due_date = new Date(toggledDueDate.due_date).toISOString().split('T')[0];
       try {
         const res = await fetch('http://localhost:5001/tasks/' + toggledDueDate.task_id + '/due-by', {
@@ -54,8 +60,7 @@
             } else {
                 successMessage = 'Due date successfully activated.';
             }
-            // Fix the following line, it doesn't trigger an update of the table
-            toggledDueDate.is_active = !toggledDueDate.is_active; // Toggle the local value to avoid another fetch
+            fetchData();
             acts.add({ mode: 'success', message: successMessage, lifetime: 3});
         } else {
             acts.add({ mode: 'error', message: 'Something went wrong, for more info consult the console.' });
@@ -65,6 +70,8 @@
       } catch (error) {
         acts.add({ mode: 'error', message: 'Something went wrong, for more info consult the console.' });
         console.error(error);
+      } finally {
+        updateInProgress = false;
       }
     }
 
