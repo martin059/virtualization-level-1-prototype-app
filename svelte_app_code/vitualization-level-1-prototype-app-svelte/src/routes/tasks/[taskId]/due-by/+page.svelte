@@ -34,8 +34,7 @@
     });
 
     function gotToNewDueDateForm() {
-        acts.add({ mode: 'warn', message: 'To be implemented', lifetime: 3});
-        goto('/tasks/' + taskId + '/due-by/new'); // TODO implement this
+        goto('/tasks/' + taskId + '/due-by/new');
     }
 
 </script>
