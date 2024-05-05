@@ -78,6 +78,7 @@
               <option value="Dropped">Dropped</option>
               <option value="Postponed">Postponed</option>
               <option value="Done">Done</option>
+              <option value="Deleted">Deleted</option>
             </select>
           </div>
           <div>

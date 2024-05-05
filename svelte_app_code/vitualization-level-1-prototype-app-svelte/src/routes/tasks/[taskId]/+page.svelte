@@ -11,6 +11,7 @@
     let response: any;
     let task: Task;
     let isLoading: boolean = true;
+    let updateDisabled: boolean = true;
 
     onMount(async () => {
         try {
@@ -42,10 +43,32 @@
         {#if isLoading}
             <LoadingSpinner />
         {:else}
-            <p>Task ID: {task.id}</p>
-            <p>Task Name: {task.task_name}</p>
-            <p>Task Description: {task.task_descrip}</p>
-            <p>Task Status: {task.task_status}</p>
+            <Col class="col-6">
+                <div>
+                    <div class="mb-3">
+                      <label for="task_id" class="form-label">Task ID</label>
+                      <input type="text" class="form-control" id="task_id" bind:value={task.id} disabled/>
+                    </div>
+                    <div class="mb-3">
+                      <label for="task_name" class="form-label">Task Name</label>
+                      <input type="text" class="form-control" id="task_name" bind:value={task.task_name} disabled={updateDisabled}/>
+                    </div>
+                    <div class="mb-3">
+                      <label for="task_descrip" class="form-label">Task Description</label>
+                      <textarea class="form-control" id="task_descrip" rows="3" bind:value={task.task_descrip} disabled={updateDisabled}></textarea>
+                    </div>
+                    <div class="mb-3">
+                      <label for="task_status" class="form-label">Task Status</label>
+                      <select class="form-select" id="task_status" bind:value={task.task_status} disabled={updateDisabled}>
+                        <option value="Created" selected>Created</option>
+                        <option value="Dropped">Dropped</option>
+                        <option value="Postponed">Postponed</option>
+                        <option value="Done">Done</option>
+                        <option value="Deleted">Deleted</option>
+                      </select>
+                    </div>
+                </div>
+            </Col>
         {/if}
     </Col>
 </main>
