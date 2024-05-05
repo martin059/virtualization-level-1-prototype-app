@@ -26,7 +26,7 @@
           body: JSON.stringify(newTask),
           timeout: 10000 // 10 seconds
         });
-        // const response = await res.json();
+        const response = await res.json();
         const statusCode = res.status;
         if (statusCode >= 200 && statusCode < 300) {
           acts.add({ mode: 'success', message: 'Task created successfully. Redirecting to task page...', lifetime: 2});
@@ -34,7 +34,8 @@
           goto('/tasks');
         } else {
           acts.add({ mode: 'error', message: 'Something went wrong, for more info consult the console.' });
-          console.log('Status response code: ' + statusCode + ';Response: ' + response);
+          console.log('Status response code: ' + statusCode + ';Response: ');
+          console.log(response);
         }
         submitEnabled = true;
       } else {

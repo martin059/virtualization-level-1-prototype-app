@@ -17,11 +17,11 @@
             const statusCode = res.status;
             response = await res.json();
             if (statusCode >= 200 && statusCode < 300) {
-                response = await res.json();
                 tasks = response as Task[];
             } else {
                 acts.add({ mode: 'error', message: 'Something went wrong, for more info consult the console.', lifetime: 3});
-                console.log('Status response code: ' + statusCode + ';Response: ' + response);
+                console.log('Status response code: ' + statusCode + ';Response: ');
+                console.log(response);
             }
         } catch (error) {
             acts.add({ mode: 'error', message: 'Something went wrong, for more info consult the console.' });

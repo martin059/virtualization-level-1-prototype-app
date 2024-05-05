@@ -18,13 +18,14 @@
         try {
             const res = await fetch('http://localhost:5001/tasks/' + taskId);
             const statusCode = res.status;
+            response = await res.json();
             if (statusCode >= 200 && statusCode < 300) {
-                response = await res.json();
                 task = response[0] as Task;
                 checkDueDates();
             } else {
                 acts.add({ mode: 'error', message: 'Something went wrong, for more info consult the console.', lifetime: 3});
-                console.log('Status response code: ' + statusCode + ';Response: ' + response);
+                console.log('Status response code: ' + statusCode + ';Response: ');
+                console.log(response);
             }
         } catch (error) {
             acts.add({ mode: 'error', message: 'Something went wrong, for more info consult the console.', lifetime: 3 });
