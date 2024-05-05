@@ -1,23 +1,25 @@
 <script lang="ts">
+    import { page } from '$app/stores';
     import { onMount } from 'svelte';
     import { Col, NavBar, Button } from "@components/commonComponents";
     import { Table } from '@sveltestrap/sveltestrap';
     import LoadingSpinner from '@components/loadingSpinner.svelte';
+    import type { DueDate } from "@models/DueDate";
     import { Notifications, acts } from '@tadashi/svelte-notification'
-    import type { Task } from "@models/Task";
-    import { goto } from '$app/navigation';
+    // import { goto } from '$app/navigation';
 
+    let taskId: string | null = $page.params.taskId;
     let response: any;
-    let tasks: Task[] = [];
+    let dueDates: DueDate[] = [];
     let isLoading: boolean = true;
 
     onMount(async () => {
         try {
-            const res = await fetch('http://localhost:5001/tasks');
+            const res = await fetch('http://localhost:5001/tasks/' + taskId + '/due-by');
             const statusCode = res.status;
             response = await res.json();
             if (statusCode >= 200 && statusCode < 300) {
-                tasks = response as Task[];
+                dueDates = response as DueDate[];
             } else {
                 acts.add({ mode: 'error', message: 'Something went wrong, for more info consult the console.', lifetime: 3});
                 console.log('Status response code: ' + statusCode + ';Response: ');
@@ -31,9 +33,11 @@
         }
     });
 
-    function gotToNewTaskForm() {
-        goto('/tasks/new');
+    function gotToNewDueDateForm() {
+        acts.add({ mode: 'warn', message: 'To be implemented', lifetime: 3});
+        // goto('/tasks/' + taskId + '/due-by/new'); // TODO implement this
     }
+
 </script>
 
 <main class="d-flex flex-row full-height">
@@ -41,7 +45,7 @@
         <NavBar />
     </Col>
     <Col class="col-11 d-flex align-items-center flex-column">
-        <h1>Task List</h1>
+        <h1>Task {taskId}'s Due dates</h1>
         <Notifications />
         {#if isLoading}
             <LoadingSpinner />
@@ -51,29 +55,27 @@
                     <Table striped hover>
                         <thead>
                             <tr>
-                                <th>Id</th>
-                                <th>Name</th>
-                                <th>Description</th>
-                                <th>Creation Date</th>
-                                <th>Status</th>
-                                <th>Details</th>
+                                <th>Due date</th>
+                                <th>Is date active</th>
+                                <th>Modify is active</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {#each tasks as task (task.id)}
+                            {#each dueDates as dueDate }
                                 <tr>
-                                    <th scope="row">{task.id}</th>
-                                    <td>{task.task_name}</td>
-                                    <td>{task.task_descrip}</td>
-                                    <td>{new Date(task.creation_date).toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: '2-digit' })}</td>
-                                    <td>{task.task_status}</td>
-                                    <td><Button color="info" on:click={() => goto(`/tasks/${task.id}`)}>View</Button></td>
+                                    <td>{new Date(dueDate.due_date).toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: '2-digit' })}</td>
+                                    <td>{dueDate.is_active}</td>
+                                    {#if dueDate.is_active}
+                                        <td><Button color="info" on:click={() => acts.add({ mode: 'warn', message: 'To be implemented', lifetime: 3})}>Deactivate</Button></td>
+                                    {:else}
+                                        <td><Button color="info" on:click={() => acts.add({ mode: 'warn', message: 'To be implemented', lifetime: 3})}>Activate</Button></td>
+                                    {/if}
                                 </tr>
                             {/each}
                         </tbody>
                     </Table>
                     <div>
-                        <Button color="primary" block on:click={() => gotToNewTaskForm()}>Create new Task</Button>
+                        <Button color="primary" block on:click={() => gotToNewDueDateForm()}>Add new due date</Button>
                     </div>
                 </div>
             </div>
