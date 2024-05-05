@@ -6,7 +6,7 @@
     import LoadingSpinner from '@components/loadingSpinner.svelte';
     import type { DueDate } from "@models/DueDate";
     import { Notifications, acts } from '@tadashi/svelte-notification'
-    // import { goto } from '$app/navigation';
+    import { goto } from '$app/navigation';
 
     let taskId: string | null = $page.params.taskId;
     let response: any;
@@ -35,7 +35,7 @@
 
     function gotToNewDueDateForm() {
         acts.add({ mode: 'warn', message: 'To be implemented', lifetime: 3});
-        // goto('/tasks/' + taskId + '/due-by/new'); // TODO implement this
+        goto('/tasks/' + taskId + '/due-by/new'); // TODO implement this
     }
 
 </script>
