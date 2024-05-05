@@ -11,9 +11,10 @@
     let taskId: string | null = $page.params.taskId;
     let response: any;
     let dueDates: DueDate[] = [];
+    let updateInProgress: boolean = false;
     let isLoading: boolean = true;
 
-    onMount(async () => {
+    async function fetchData() {
         try {
             const res = await fetch('http://localhost:5001/tasks/' + taskId + '/due-by');
             const statusCode = res.status;
@@ -31,15 +32,48 @@
         } finally {
             isLoading = false;
         }
-    });
+    }
 
+    onMount(fetchData);
 
-    async function toggleDueDateActivation(toggledDueDate: DueDate) {
-        //try {
-        //    const res = await fetch('http://localhost:5001/tasks/' + taskId + '/due-by/'
-        console.log(toggledDueDate);
-        acts.add({ mode: 'warn', message: 'TO BE IMPLEMENTED', lifetime: 3 });
-        } 
+    async function toggleDueDateActivation(toggledDueDate: DueDate) {  
+    if (updateInProgress) {
+        acts.add({ mode: 'warn', message: 'Wait until a response is returned.', lifetime: 3 });
+        return;
+    } else { updateInProgress = true; }
+    toggledDueDate.due_date = new Date(toggledDueDate.due_date).toISOString().split('T')[0];
+      try {
+        const res = await fetch('http://localhost:5001/tasks/' + toggledDueDate.task_id + '/due-by', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: '{"due_date":"'+ toggledDueDate.due_date + '"}',
+            timeout: 10000 // 10 seconds
+        });
+        const response = await res.json();
+        const statusCode = res.status;
+        if (statusCode >= 200 && statusCode < 300) {
+            let successMessage: string;
+            if (toggledDueDate.is_active) {
+                successMessage = 'Due date successfully deactivated.';
+            } else {
+                successMessage = 'Due date successfully activated.';
+            }
+            fetchData();
+            acts.add({ mode: 'success', message: successMessage, lifetime: 3});
+        } else {
+            acts.add({ mode: 'error', message: 'Something went wrong, for more info consult the console.' });
+            console.log('Status response code: ' + statusCode + ';Response: ');
+            console.log(response);
+        }
+      } catch (error) {
+        acts.add({ mode: 'error', message: 'Something went wrong, for more info consult the console.' });
+        console.error(error);
+      } finally {
+        updateInProgress = false;
+      }
+    }
 
     function gotToNewDueDateForm() {
         goto('/tasks/' + taskId + '/due-by/new');
