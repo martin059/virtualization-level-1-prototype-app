@@ -126,13 +126,13 @@ def insert_into_due_by_table(task_id: int, due_date: str) -> str:
                 # Check if the task has an active due date
                 cur.execute(select_query)
                 rows = cur.fetchall()
-                modification_necessary: bool = True
+                further_modification_necessary: bool = True
                 due_date_already_present: bool = False
                 if rows:
-                    modification_necessary, due_date_already_present, msg = check_current_due_date(cur, rows, due_date,
+                    further_modification_necessary, due_date_already_present, msg = check_current_due_date(cur, rows, due_date,
                                                                                                     update_deactivate_query)
                 # If modification is necessary, and due date is already present, activate row
-                if modification_necessary:
+                if further_modification_necessary:
                     if due_date_already_present:
                         cur.execute(update_activate_query)
                         msg = f"Updated active due date for task id: {task_id}"
@@ -184,11 +184,11 @@ def check_current_due_date(cur: psycopg2.extensions.cursor, due_date_rows: list,
 
     Returns:
         tuple: A tuple containing the following values:
-            - modification_necessary (bool): Indicates whether modification is necessary.
+            - further_modification_necessary (bool): Indicates whether further modification is necessary after this function.
             - due_date_already_present (bool): Indicates whether the due date is already present.
             - msg (str): A message indicating the result of the operation.
     """
-    modification_necessary = True
+    further_modification_necessary = True
     due_date_already_present = False
     active_due_date = None
     for row in due_date_rows:
@@ -197,10 +197,12 @@ def check_current_due_date(cur: psycopg2.extensions.cursor, due_date_rows: list,
         if str(row["due_date"]) == due_date:
             due_date_already_present = True
     # If the new due date is different from the active one, update the active row
+    # Otherwise, just deactivate the active row
     if str(active_due_date) != due_date:
         cur.execute(update_deactivate_query) # Deactivate previous old due date
         msg: str = "Updated active due date"
     else:
-        modification_necessary = False
-        msg = "New due date is the same as the active one"
-    return modification_necessary, due_date_already_present, msg
+        cur.execute(update_deactivate_query) # Deactivate due date
+        further_modification_necessary = False
+        msg = "New due date is the same as the active one. The date is deactivated."
+    return further_modification_necessary, due_date_already_present, msg
