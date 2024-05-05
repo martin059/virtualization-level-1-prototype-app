@@ -35,7 +35,7 @@
         } else {
           acts.add({ mode: 'error', message: 'Something went wrong, for more info consult the console.' });
         }
-        console.log(response);
+        console.log(res);
         submitEnabled = true;
       } else {
         acts.add({ mode: 'warn', message: 'Wait until a response is returned.', lifetime: 3 });

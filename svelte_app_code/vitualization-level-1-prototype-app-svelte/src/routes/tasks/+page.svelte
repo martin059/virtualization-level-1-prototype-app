@@ -14,8 +14,15 @@
     onMount(async () => {
         try {
             const res = await fetch('http://localhost:5001/tasks');
+            const statusCode = res.status;
             response = await res.json();
-            tasks = response as Task[];
+            if (statusCode >= 200 && statusCode < 300) {
+                response = await res.json();
+                tasks = response as Task[];
+            } else {
+                acts.add({ mode: 'error', message: 'Something went wrong, for more info consult the console.', lifetime: 3});
+                console.log(res);
+            }
         } catch (error) {
             acts.add({ mode: 'error', message: 'Something went wrong, for more info consult the console.' });
             console.error(error);
