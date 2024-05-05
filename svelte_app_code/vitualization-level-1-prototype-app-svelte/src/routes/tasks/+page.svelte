@@ -21,7 +21,7 @@
                 tasks = response as Task[];
             } else {
                 acts.add({ mode: 'error', message: 'Something went wrong, for more info consult the console.', lifetime: 3});
-                console.log(res);
+                console.log('Status response code: ' + statusCode + ';Response: ' + response);
             }
         } catch (error) {
             acts.add({ mode: 'error', message: 'Something went wrong, for more info consult the console.' });
