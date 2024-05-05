@@ -33,6 +33,14 @@
         }
     });
 
+
+    async function toggleDueDateActivation(toggledDueDate: DueDate) {
+        //try {
+        //    const res = await fetch('http://localhost:5001/tasks/' + taskId + '/due-by/'
+        console.log(toggledDueDate);
+        acts.add({ mode: 'warn', message: 'TO BE IMPLEMENTED', lifetime: 3 });
+        } 
+
     function gotToNewDueDateForm() {
         goto('/tasks/' + taskId + '/due-by/new');
     }
@@ -64,11 +72,15 @@
                                 <tr>
                                     <td>{new Date(dueDate.due_date).toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: '2-digit' })}</td>
                                     <td>{dueDate.is_active}</td>
-                                    {#if dueDate.is_active}
-                                        <td><Button color="info" on:click={() => acts.add({ mode: 'warn', message: 'To be implemented', lifetime: 3})}>Deactivate</Button></td>
-                                    {:else}
-                                        <td><Button color="info" on:click={() => acts.add({ mode: 'warn', message: 'To be implemented', lifetime: 3})}>Activate</Button></td>
-                                    {/if}
+                                    <td>
+                                        <Button color="info" on:click={() => toggleDueDateActivation(dueDate)}>
+                                        {#if dueDate.is_active}
+                                            Deactivate
+                                        {:else}
+                                            Activate
+                                        {/if}
+                                        </Button>
+                                    </td>
                                 </tr>
                             {/each}
                         </tbody>
