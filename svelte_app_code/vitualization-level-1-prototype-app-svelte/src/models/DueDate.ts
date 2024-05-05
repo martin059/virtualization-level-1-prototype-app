@@ -8,7 +8,7 @@ export interface DueDate {
     task_id: string;
     
     /**
-     * The due date.
+     * The due date. With format 'YYYY-MM-DD'.
      */
     due_date: string;
     
