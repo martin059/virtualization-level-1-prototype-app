@@ -56,6 +56,7 @@
                                 <th>Description</th>
                                 <th>Creation Date</th>
                                 <th>Status</th>
+                                <th>Details</th>
                             </tr>
                         </thead>
                         <tbody>
