@@ -193,7 +193,8 @@
 							{
 								"key": "Content-Type",
 								"value": "application/json",
-								"type": "text"
+								"type": "text",
+								"uuid": "3f9e56ce-3f7a-42e2-9cb0-49eb62e58caa"
 							}
 						],
 						"body": {
@@ -257,7 +258,8 @@
 							{
 								"key": "Content-Type",
 								"value": "application/json",
-								"type": "text"
+								"type": "text",
+								"uuid": "9c2ac2f9-a581-4c61-a9c9-6e5afe2e43f9"
 							}
 						],
 						"body": {
@@ -322,7 +324,8 @@
 							{
 								"key": "Content-Type",
 								"value": "application/json",
-								"type": "text"
+								"type": "text",
+								"uuid": "e93cad2c-1d08-434b-8aa5-b5f6e71de93f"
 							}
 						],
 						"url": {
@@ -571,7 +574,8 @@
 							{
 								"key": "Content-Type",
 								"value": "application/json",
-								"type": "text"
+								"type": "text",
+								"uuid": "689eb0d4-d1f5-4bd1-a69d-8fc336b1419f"
 							}
 						],
 						"url": {
@@ -620,7 +624,8 @@
 							{
 								"key": "Content-Type",
 								"value": "application/json",
-								"type": "text"
+								"type": "text",
+								"uuid": "2957cd38-cdb5-42d7-a4ae-b80c27d2dab4"
 							}
 						],
 						"body": {
@@ -668,7 +673,8 @@
 							{
 								"key": "Content-Type",
 								"value": "application/json",
-								"type": "text"
+								"type": "text",
+								"uuid": "bdd2d96d-7a2c-4280-a1dd-86cda2daec4d"
 							}
 						],
 						"body": {
@@ -727,7 +733,8 @@
 							{
 								"key": "Content-Type",
 								"value": "application/json",
-								"type": "text"
+								"type": "text",
+								"uuid": "f06993f9-6e17-4eeb-a243-aa1edb2b0c08"
 							}
 						],
 						"body": {
@@ -960,7 +967,8 @@
 							{
 								"key": "Content-Type",
 								"value": "application/json",
-								"type": "text"
+								"type": "text",
+								"uuid": "b19efb54-8248-4668-a4ee-ba5d752e91e3"
 							}
 						],
 						"body": {
@@ -1021,7 +1029,8 @@
 							{
 								"key": "Content-Type",
 								"value": "application/json",
-								"type": "text"
+								"type": "text",
+								"uuid": "32c63b12-0936-41eb-820f-ebb9cfdd64a2"
 							}
 						],
 						"body": {
@@ -1082,7 +1091,8 @@
 							{
 								"key": "Content-Type",
 								"value": "application/json",
-								"type": "text"
+								"type": "text",
+								"uuid": "da249c33-3653-42f1-93f2-f2145fc24976"
 							}
 						],
 						"body": {
@@ -1129,7 +1139,7 @@
 									"pm.test(\"Body has the expected message\", function () {",
 									"    var jsonData = pm.response.json();",
 									"    pm.expect(jsonData).to.have.property('message');",
-									"    pm.expect(jsonData.message).to.eql('New due date is the same as the active one');",
+									"    pm.expect(jsonData.message).to.eql('New due date is the same as the active one. The date is deactivated.');",
 									"});"
 								],
 								"type": "text/javascript",
@@ -1143,7 +1153,7 @@
 							{
 								"key": "Content-Type",
 								"value": "application/json",
-								"type": "text"
+								"uuid": "b27a5e5c-1b11-4ed9-b499-3590938dd6b9"
 							}
 						],
 						"body": {
@@ -1204,7 +1214,8 @@
 							{
 								"key": "Content-Type",
 								"value": "application/json",
-								"type": "text"
+								"type": "text",
+								"uuid": "86a8ed79-9deb-4d02-8339-06dcff5df284"
 							}
 						],
 						"body": {
@@ -1265,7 +1276,8 @@
 							{
 								"key": "Content-Type",
 								"value": "application/json",
-								"type": "text"
+								"type": "text",
+								"uuid": "81afc483-f3f5-46bc-a200-d49150dab70a"
 							}
 						],
 						"body": {
