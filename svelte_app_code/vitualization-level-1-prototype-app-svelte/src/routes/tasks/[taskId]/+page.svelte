@@ -56,6 +56,10 @@
     function gotoTaskDueDates() {
         goto('/tasks/' + taskId + '/due-by');
     }
+
+    function createTaskDueDate() {
+        goto('/tasks/' + taskId + '/due-by/new');
+    }
 </script>
 
 <main class="d-flex flex-row full-height">
@@ -96,6 +100,10 @@
                 {#if hasDueDates}
                   <div>
                     <Button on:click={gotoTaskDueDates} color="info" block>View Task's due dates</Button>
+                  </div>
+                {:else}
+                  <div>
+                    <Button on:click={createTaskDueDate} color="info" block>Create Task's due dates</Button>
                   </div>
                 {/if}
             </Col>

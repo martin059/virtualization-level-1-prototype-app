@@ -5,12 +5,12 @@ export interface DueDate {
     /**
      * The ID of the Task.
      */
-    task_id: number;
+    task_id: string;
     
     /**
-     * The due date.
+     * The due date. With format 'YYYY-MM-DD'.
      */
-    due_date: Date;
+    due_date: string;
     
     /**
      * Indicates whether the due date is active.

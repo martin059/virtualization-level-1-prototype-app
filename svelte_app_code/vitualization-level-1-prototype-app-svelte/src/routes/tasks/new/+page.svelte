@@ -7,7 +7,8 @@
    import { goto } from "$app/navigation";
 
   // By default, the new task is created with the status 'Created'
-  let newTask: Task = { task_name: '', task_descrip: '', task_status: 'Created' };
+  let newTask: Task = { task_name: '', task_descrip: '', task_status: 'Created', due_date: null };
+
   let submitEnabled: boolean;
 
   onMount(() => {
@@ -82,6 +83,11 @@
               <option value="Deleted">Deleted</option>
             </select>
           </div>
+          <div class="mb-3">
+            <label for="due_date" class="form-label">Optional due date (leave as is if it doesn't have one)</label>
+            <input type="date" class="form-control" id="due_date" bind:value={newTask.due_date}/>
+           </div>
+          <div>
           <div>
             <Button type="submit" color="primary" block>Submit New Task</Button>
           </div>
