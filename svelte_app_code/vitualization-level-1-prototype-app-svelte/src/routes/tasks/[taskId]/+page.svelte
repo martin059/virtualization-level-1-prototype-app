@@ -11,6 +11,7 @@
     let response: any;
     let task: Task;
     let isLoading: boolean = true;
+    let hasDueDates: boolean = false;
     let updateDisabled: boolean = true;
 
     onMount(async () => {
@@ -20,6 +21,7 @@
             if (statusCode >= 200 && statusCode < 300) {
                 response = await res.json();
                 task = response[0] as Task;
+                checkDueDates();
             } else {
                 acts.add({ mode: 'error', message: 'Something went wrong, for more info consult the console.', lifetime: 3});
                 console.log(response);
@@ -31,6 +33,28 @@
             isLoading = false;
         }
     });
+
+    async function checkDueDates() {
+        try {
+          const res = await fetch('http://localhost:5001/tasks/' + taskId + '/due-by');
+          const statusCode = res.status;
+          if (statusCode == 404) {
+              hasDueDates = false;
+          } else if (statusCode == 200) {
+              hasDueDates = true;
+          } else {
+              acts.add({ mode: 'error', message: 'Something went wrong while getting task\'s due dates, for more info consult the console.', lifetime: 3 });
+              console.log(response);
+          }
+        } catch (error) {
+          acts.add({ mode: 'error', message: 'Something went wrong while getting task\'s due dates, for more info consult the console.', lifetime: 3 });
+          console.error(error);
+        }
+    }
+
+    function gotoTaskDueDates() {
+        goto('/tasks/' + taskId + '/due-by');
+    }
 </script>
 
 <main class="d-flex flex-row full-height">
@@ -68,6 +92,11 @@
                       </select>
                     </div>
                 </div>
+                {#if hasDueDates}
+                  <div>
+                    <Button on:click={gotoTaskDueDates} color="info" block>View Task's due dates</Button>
+                  </div>
+                {/if}
             </Col>
         {/if}
     </Col>
