@@ -1,114 +1,164 @@
 <script lang="ts">
-    import { page } from '$app/stores';
-    import { onMount } from 'svelte';
-    import { Col, NavBar, Button } from "@components/commonComponents";
-    import LoadingSpinner from '@components/loadingSpinner.svelte';
-    import type { Task } from "@models/Task";
-    import { Notifications, acts } from '@tadashi/svelte-notification'
-    import { goto } from '$app/navigation';
+  import { page } from '$app/stores';
+  import { onMount } from 'svelte';
+  import { Col, NavBar, Button } from "@components/commonComponents";
+  import LoadingSpinner from '@components/loadingSpinner.svelte';
+  import type { Task } from "@models/Task";
+  import { Notifications, acts } from '@tadashi/svelte-notification'
+  import { goto } from '$app/navigation';
 
-    let taskId: string | null = $page.params.taskId;
-    let response: any;
-    let task: Task;
-    let isLoading: boolean = true;
-    let hasDueDates: boolean = false;
-    let updateDisabled: boolean = true;
+  let taskId: string | null = $page.params.taskId;
+  let response: any;
+  let task: Task;
+  let isLoading: boolean = true;
+  let hasDueDates: boolean = false;
+  let updateDisabled: boolean = true;
 
-    onMount(async () => {
-        try {
-            const res = await fetch('http://localhost:5001/tasks/' + taskId);
-            const statusCode = res.status;
-            response = await res.json();
-            if (statusCode >= 200 && statusCode < 300) {
-                task = response[0] as Task;
-                checkDueDates();
-            } else {
-                acts.add({ mode: 'error', message: 'Something went wrong, for more info consult the console.', lifetime: 3});
-                console.log('Status response code: ' + statusCode + ';Response: ');
-                console.log(response);
-            }
-        } catch (error) {
-            acts.add({ mode: 'error', message: 'Something went wrong, for more info consult the console.', lifetime: 3 });
-            console.error(error);
-        } finally {
-            isLoading = false;
+  onMount(async () => {
+    let dueDateChecking: boolean = false;
+    try {
+        const res = await fetch('http://localhost:5001/tasks/' + taskId);
+        const statusCode = res.status;
+        response = await res.json();
+        if (statusCode >= 200 && statusCode < 300) {
+          task = response[0] as Task;
+          checkDueDates();
+          dueDateChecking = true;
+        } else {
+          acts.add({ mode: 'error', message: 'Something went wrong, for more info consult the console.', lifetime: 3});
+          console.log('Status response code: ' + statusCode + ';Response: ');
+          console.log(response);
         }
-    });
+    } catch (error) {
+      acts.add({ mode: 'error', message: 'Something went wrong, for more info consult the console.', lifetime: 3 });
+      console.error(error);
+    } finally {
+      // This check ensures that the proper button is displayed at the end of loading
+      if (!dueDateChecking) {
+        isLoading = false;
+      }
+    }
+  });
 
-    async function checkDueDates() {
-        try {
-          const res = await fetch('http://localhost:5001/tasks/' + taskId + '/due-by');
-          const statusCode = res.status;
-          if (statusCode == 404) {
-              hasDueDates = false;
-          } else if (statusCode == 200) {
-              hasDueDates = true;
-          } else {
-              acts.add({ mode: 'error', message: 'Something went wrong while getting task\'s due dates, for more info consult the console.', lifetime: 3 });
-              console.log('Status response code: ' + statusCode + ';Response: ' + response);
-          }
-        } catch (error) {
-          acts.add({ mode: 'error', message: 'Something went wrong while getting task\'s due dates, for more info consult the console.', lifetime: 3 });
-          console.error(error);
+  async function checkDueDates() {
+    try {
+      const res = await fetch('http://localhost:5001/tasks/' + taskId + '/due-by');
+      const statusCode = res.status;
+      if (statusCode == 404) {
+        hasDueDates = false;
+      } else if (statusCode == 200) {
+        hasDueDates = true;
+      } else {
+        acts.add({ mode: 'error', message: 'Something went wrong while getting task\'s due dates, for more info consult the console.', lifetime: 3 });
+        console.log('Status response code: ' + statusCode + ';Response: ' + response);
+      }
+    } catch (error) {
+      acts.add({ mode: 'error', message: 'Something went wrong while getting task\'s due dates, for more info consult the console.', lifetime: 3 });
+      console.error(error);
+    } finally {
+      isLoading = false;
+    }
+  }
+
+  function gotoTaskDueDates() {
+    goto('/tasks/' + taskId + '/due-by');
+  }
+
+  function createTaskDueDate() {
+    goto('/tasks/' + taskId + '/due-by/new');
+  }
+
+  function enableUpdateTask() {
+    updateDisabled = !updateDisabled;
+  }
+
+  // TODO modify this function which was autogenerated
+  function updateTask() {
+    updateDisabled = true; // TODO put this line at the end of this function
+    /*if (isTaskNameValid()) {
+      fetch('http://localhost:5001/tasks/' + taskId, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(task)
+      }).then(res => {
+        if (res.status >= 200 && res.status < 300) {
+          acts.add({ mode: 'success', message: 'Task updated successfully.', lifetime: 3 });
+          updateDisabled = true;
+        } else {
+          acts.add({ mode: 'error', message: 'Something went wrong while updating the task, for more info consult the console.', lifetime: 3 });
+          console.log('Status response code: ' + res.status + ';Response: ');
+          console.log(response);
         }
-    }
+      }).catch(error => {
+        acts.add({ mode: 'error', message: 'Something went wrong while updating the task, for more info consult the console.', lifetime: 3 });
+        console.error(error);
+      });
+    }*/
+  }
 
-    function gotoTaskDueDates() {
-        goto('/tasks/' + taskId + '/due-by');
+  function isTaskNameValid(): boolean {
+    if (task.task_name.trim() === '') {
+      acts.add({ mode: 'error', message: 'Task name must not be empty.', lifetime: 3 });
+      return false;
+    } else {
+      return true;
     }
-
-    function createTaskDueDate() {
-        goto('/tasks/' + taskId + '/due-by/new');
-    }
+  }
 </script>
 
 <main class="d-flex flex-row full-height">
-    <Col class="col-1">
-        <NavBar />
-    </Col>
-    <Col class="col-11 d-flex align-items-center flex-column">
-        <h1>Task Details</h1>
-        <Notifications />
-        {#if isLoading}
-            <LoadingSpinner />
-        {:else}
-            <Col class="col-6">
-                <div>
-                    <div class="mb-3">
-                      <label for="task_id" class="form-label">Task ID</label>
-                      <input type="text" class="form-control" id="task_id" bind:value={task.id} disabled/>
-                    </div>
-                    <div class="mb-3">
-                      <label for="task_name" class="form-label">Task Name</label>
-                      <input type="text" class="form-control" id="task_name" bind:value={task.task_name} disabled={updateDisabled}/>
-                    </div>
-                    <div class="mb-3">
-                      <label for="task_descrip" class="form-label">Task Description</label>
-                      <textarea class="form-control" id="task_descrip" rows="3" bind:value={task.task_descrip} disabled={updateDisabled}></textarea>
-                    </div>
-                    <div class="mb-3">
-                      <label for="task_status" class="form-label">Task Status</label>
-                      <select class="form-select" id="task_status" bind:value={task.task_status} disabled={updateDisabled}>
-                        <option value="Created" selected>Created</option>
-                        <option value="Dropped">Dropped</option>
-                        <option value="Postponed">Postponed</option>
-                        <option value="Done">Done</option>
-                        <option value="Deleted">Deleted</option>
-                      </select>
-                    </div>
-                </div>
+  <Col class="col-1">
+    <NavBar />
+  </Col>
+  <Col class="col-11 d-flex align-items-center flex-column">
+    <h1>Task Details</h1>
+    <Notifications />
+    {#if isLoading}
+      <LoadingSpinner />
+    {:else}
+      <Col class="col-6">
+          <div>
+              <div class="mb-3">
+                <label for="task_id" class="form-label">Task ID</label>
+                <input type="text" class="form-control" id="task_id" bind:value={task.id} disabled/>
+              </div>
+              <div class="mb-3">
+                <label for="task_name" class="form-label">Task Name</label>
+                <input type="text" class="form-control" id="task_name" bind:value={task.task_name} disabled={updateDisabled}/>
+              </div>
+              <div class="mb-3">
+                <label for="task_descrip" class="form-label">Task Description</label>
+                <textarea class="form-control" id="task_descrip" rows="3" bind:value={task.task_descrip} disabled={updateDisabled}></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="task_status" class="form-label">Task Status</label>
+                <select class="form-select" id="task_status" bind:value={task.task_status} disabled={updateDisabled}>
+                  <option value="Created" selected>Created</option>
+                  <option value="Dropped">Dropped</option>
+                  <option value="Postponed">Postponed</option>
+                  <option value="Done">Done</option>
+                  <option value="Deleted">Deleted</option>
+                </select>
+              </div>
+          </div>
+            <div class="d-flex justify-content-between">
+              {#if updateDisabled}
+                <Button on:click={enableUpdateTask} color="primary" block>Enable editing</Button>
+                <div style="margin-left: 10px;"></div>
                 {#if hasDueDates}
-                  <div>
-                    <Button on:click={gotoTaskDueDates} color="info" block>View Task's due dates</Button>
-                  </div>
+                  <Button on:click={gotoTaskDueDates} color="info" block>View Task's due dates</Button>
                 {:else}
-                  <div>
-                    <Button on:click={createTaskDueDate} color="info" block>Create Task's due dates</Button>
-                  </div>
+                  <Button on:click={createTaskDueDate} color="info" block>Create Task's due dates</Button>
                 {/if}
-            </Col>
-        {/if}
-    </Col>
+              {:else}
+                <Button on:click={updateTask} color="primary" block>Update Task</Button>
+              {/if}
+            </div>
+      </Col>
+    {/if}
+  </Col>
 </main>
 
 <style>
