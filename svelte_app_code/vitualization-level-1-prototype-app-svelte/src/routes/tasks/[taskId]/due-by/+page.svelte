@@ -37,11 +37,11 @@
     onMount(fetchData);
 
     async function toggleDueDateActivation(toggledDueDate: DueDate) {  
-    if (updateInProgress) {
-        acts.add({ mode: 'warn', message: 'Wait until a response is returned.', lifetime: 3 });
-        return;
-    } else { updateInProgress = true; }
-    toggledDueDate.due_date = new Date(toggledDueDate.due_date).toISOString().split('T')[0];
+      if (updateInProgress) {
+          acts.add({ mode: 'warn', message: 'Wait until a response is returned.', lifetime: 3 });
+          return;
+      } else { updateInProgress = true; }
+      toggledDueDate.due_date = new Date(toggledDueDate.due_date).toISOString().split('T')[0];
       try {
         const res = await fetch('http://localhost:5001/tasks/' + toggledDueDate.task_id + '/due-by', {
             method: 'PUT',

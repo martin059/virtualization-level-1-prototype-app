@@ -4,7 +4,7 @@
   import { Notifications, acts } from '@tadashi/svelte-notification'
   import type { Task } from "@models/Task";
   import { onMount } from "svelte";
-   import { goto } from "$app/navigation";
+  import { goto } from "$app/navigation";
 
   // By default, the new task is created with the status 'Created'
   let newTask: Task = { task_name: '', task_descrip: '', task_status: 'Created', due_date: null };
