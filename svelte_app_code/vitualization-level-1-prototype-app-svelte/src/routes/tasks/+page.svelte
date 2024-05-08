@@ -38,13 +38,8 @@
     }
 
     // TODO IMPLEMENT THIS follow the example of update task
-    async function markAsDone(taskId: number) {
+    async function updateTaskStatus(taskId: number, newStatus: string) {
         console.log('Marking task as done: ' + taskId);
-    }
-
-    // TODO IMPLEMENT THIS, follow the example of update task
-    async function deleteTask(taskId: number) {
-        console.log('Deleting task: ' + taskId);
     }
 
 </script>
@@ -83,9 +78,12 @@
                                     <td>{task.task_status}</td>
                                     <td><Button color="info" on:click={() => goto(`/tasks/${task.id}`)}>View</Button></td>
                                     {#if task.task_status === 'Done' || task.task_status === 'Dropped'}
-                                        <td><Button color="danger" on:click={() => deleteTask(task.id)}>Delete</Button></td>
+                                        <td><Button color="danger" on:click={() => updateTaskStatus(task.id, 'Deleted')}>Delete</Button></td>
                                     {:else if task.task_status !== 'Deleted'}
-                                        <td><Button color="secondary" on:click={() => markAsDone(task.id)}>Mark as done</Button></td>
+                                        <td>
+                                            <Button color="secondary" on:click={() => updateTaskStatus(task.id, 'Done')}>Done</Button>
+                                            <Button color="secondary" on:click={() => updateTaskStatus(task.id, 'Dropped')}>Drop</Button>
+                                        </td>
                                     {:else}
                                     <td><Button color="secondary" disabled>N/A</Button></td>
                                     {/if}
