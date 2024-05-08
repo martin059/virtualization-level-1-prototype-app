@@ -39,7 +39,39 @@
 
     // TODO IMPLEMENT THIS follow the example of update task
     async function updateTaskStatus(taskId: number, newStatus: string) {
-        console.log('Marking task as done: ' + taskId);
+        try {
+          isLoading = true;
+          let jsonString: string = `{"task_status":"${newStatus}"}`;
+          const res = await fetch("http://localhost:5001/tasks/" + taskId, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: jsonString,
+            timeout: 10000, // 10 seconds
+          });
+          const statusCode = await res.status;
+          if (statusCode >= 200 && statusCode < 300) {
+            acts.add({ mode: "success", message: "Task " + taskId + " updated", lifetime: 3 });
+            fetchData();
+          } else {
+            const response = await res.json();
+            acts.add({
+              mode: "error",
+              message: "Something went wrong, for more info consult the console.",
+            });
+            console.log("Status response code: " + statusCode + ";Response: ");
+            console.log(response);
+          }
+        } catch (error) {
+          acts.add({
+            mode: "error",
+            message: "Something went wrong, for more info consult the console.",
+          });
+          console.error(error);
+        } finally {
+          isLoading = false;
+        }
     }
 
 </script>
@@ -81,8 +113,8 @@
                                         <td><Button color="danger" on:click={() => updateTaskStatus(task.id, 'Deleted')}>Delete</Button></td>
                                     {:else if task.task_status !== 'Deleted'}
                                         <td>
-                                            <Button color="secondary" on:click={() => updateTaskStatus(task.id, 'Done')}>Done</Button>
-                                            <Button color="secondary" on:click={() => updateTaskStatus(task.id, 'Dropped')}>Drop</Button>
+                                            <Button color="success" on:click={() => updateTaskStatus(task.id, 'Done')}>Done</Button>
+                                            <Button color="warning" on:click={() => updateTaskStatus(task.id, 'Dropped')}>Drop</Button>
                                         </td>
                                     {:else}
                                     <td><Button color="secondary" disabled>N/A</Button></td>
