@@ -105,7 +105,7 @@
     if (updateInProgress) {
       acts.add({
         mode: "warn",
-        message: "Wait until a response is returned.",
+        message: "Update in progress. Wait until a response is returned.",
         lifetime: 3,
       });
       return;

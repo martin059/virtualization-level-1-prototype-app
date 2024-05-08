@@ -10,6 +10,7 @@
     let response: any;
     let tasks: Task[] = [];
     let isLoading: boolean = true;
+    let updateInProgress: boolean = false;
 
     async function fetchData() {
         try {
@@ -37,10 +38,13 @@
         goto('/tasks/new');
     }
 
-    // TODO IMPLEMENT THIS follow the example of update task
     async function updateTaskStatus(taskId: number, newStatus: string) {
+        if (updateInProgress) {
+          acts.add({mode: "warn",message: "Update in progress. Wait until a response is returned.", lifetime: 3});
+          return;
+        }
+        updateInProgress = true;
         try {
-          isLoading = true;
           let jsonString: string = `{"task_status":"${newStatus}"}`;
           const res = await fetch("http://localhost:5001/tasks/" + taskId, {
             method: "PUT",
@@ -64,13 +68,10 @@
             console.log(response);
           }
         } catch (error) {
-          acts.add({
-            mode: "error",
-            message: "Something went wrong, for more info consult the console.",
-          });
+          acts.add({mode: "error",message: "Something went wrong, for more info consult the console.",});
           console.error(error);
         } finally {
-          isLoading = false;
+          updateInProgress = false;
         }
     }
 
