@@ -11,7 +11,7 @@
     let tasks: Task[] = [];
     let isLoading: boolean = true;
 
-    onMount(async () => {
+    async function fetchData() {
         try {
             const res = await fetch('http://localhost:5001/tasks');
             const statusCode = res.status;
@@ -29,11 +29,24 @@
         } finally {
             isLoading = false;
         }
-    });
+    }
+
+    onMount(fetchData);
 
     function gotToNewTaskForm() {
         goto('/tasks/new');
     }
+
+    // TODO IMPLEMENT THIS follow the example of update task
+    async function markAsDone(taskId: number) {
+        console.log('Marking task as done: ' + taskId);
+    }
+
+    // TODO IMPLEMENT THIS, follow the example of update task
+    async function deleteTask(taskId: number) {
+        console.log('Deleting task: ' + taskId);
+    }
+
 </script>
 
 <main class="d-flex flex-row full-height">
@@ -57,6 +70,7 @@
                                 <th>Creation Date</th>
                                 <th>Status</th>
                                 <th>Details</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -68,6 +82,13 @@
                                     <td>{new Date(task.creation_date).toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: '2-digit' })}</td>
                                     <td>{task.task_status}</td>
                                     <td><Button color="info" on:click={() => goto(`/tasks/${task.id}`)}>View</Button></td>
+                                    {#if task.task_status === 'Done' || task.task_status === 'Dropped'}
+                                        <td><Button color="danger" on:click={() => deleteTask(task.id)}>Delete</Button></td>
+                                    {:else if task.task_status !== 'Deleted'}
+                                        <td><Button color="secondary" on:click={() => markAsDone(task.id)}>Mark as done</Button></td>
+                                    {:else}
+                                    <td><Button color="secondary" disabled>N/A</Button></td>
+                                    {/if}
                                 </tr>
                             {/each}
                         </tbody>
