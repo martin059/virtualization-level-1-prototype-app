@@ -21,8 +21,8 @@
                 tasks = response as Task[];
             } else {
                 acts.add({ mode: 'error', message: 'Something went wrong, for more info consult the console.', lifetime: 3});
-                console.log('Status response code: ' + statusCode + ';Response: ');
-                console.log(response);
+                console.error('Status response code: ' + statusCode + ';Response: ');
+                console.error(response);
             }
         } catch (error) {
             acts.add({ mode: 'error', message: 'Something went wrong, for more info consult the console.' });
@@ -64,8 +64,8 @@
               mode: "error",
               message: "Something went wrong, for more info consult the console.",
             });
-            console.log("Status response code: " + statusCode + ";Response: ");
-            console.log(response);
+            console.error("Status response code: " + statusCode + ";Response: ");
+            console.error(response);
           }
         } catch (error) {
           acts.add({mode: "error",message: "Something went wrong, for more info consult the console.",});
