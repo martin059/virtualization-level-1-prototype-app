@@ -33,8 +33,8 @@
           message: "Something went wrong, for more info consult the console.",
           lifetime: 3,
         });
-        console.log("Status response code: " + statusCode + ";Response: ");
-        console.log(response);
+        console.error("Status response code: " + statusCode + ";Response: ");
+        console.error(response);
       }
     } catch (error) {
       acts.add({
@@ -68,7 +68,7 @@
             "Something went wrong while getting task's due dates, for more info consult the console.",
           lifetime: 3,
         });
-        console.log(
+        console.error(
           "Status response code: " + statusCode + ";Response: " + response,
         );
       }
@@ -134,8 +134,8 @@
           mode: "error",
           message: "Something went wrong, for more info consult the console.",
         });
-        console.log("Status response code: " + statusCode + ";Response: ");
-        console.log(response);
+        console.error("Status response code: " + statusCode + ";Response: ");
+        console.error(response);
       }
     } catch (error) {
       acts.add({

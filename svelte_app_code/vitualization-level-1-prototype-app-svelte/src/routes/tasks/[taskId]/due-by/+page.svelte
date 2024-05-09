@@ -23,8 +23,8 @@
                 dueDates = response as DueDate[];
             } else {
                 acts.add({ mode: 'error', message: 'Something went wrong, for more info consult the console.', lifetime: 3});
-                console.log('Status response code: ' + statusCode + ';Response: ');
-                console.log(response);
+                console.error('Status response code: ' + statusCode + ';Response: ');
+                console.error(response);
             }
         } catch (error) {
             acts.add({ mode: 'error', message: 'Something went wrong, for more info consult the console.' });
@@ -40,7 +40,8 @@
       if (updateInProgress) {
           acts.add({ mode: 'warn', message: 'Wait until a response is returned.', lifetime: 3 });
           return;
-      } else { updateInProgress = true; }
+      }
+      updateInProgress = true;
       toggledDueDate.due_date = new Date(toggledDueDate.due_date).toISOString().split('T')[0];
       try {
         const res = await fetch('http://localhost:5001/tasks/' + toggledDueDate.task_id + '/due-by', {
@@ -64,8 +65,8 @@
             acts.add({ mode: 'success', message: successMessage, lifetime: 3});
         } else {
             acts.add({ mode: 'error', message: 'Something went wrong, for more info consult the console.' });
-            console.log('Status response code: ' + statusCode + ';Response: ');
-            console.log(response);
+            console.error('Status response code: ' + statusCode + ';Response: ');
+            console.error(response);
         }
       } catch (error) {
         acts.add({ mode: 'error', message: 'Something went wrong, for more info consult the console.' });

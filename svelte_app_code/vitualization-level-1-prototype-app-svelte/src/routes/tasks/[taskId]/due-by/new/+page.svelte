@@ -14,6 +14,8 @@
   let taskId: string | null = $page.params.taskId;
 
   onMount(() => {
+    // The following makes it so the initialization can be done in a consistent way in comparison with other views
+    // withouth it, the form would start with empty fields for an instant and be reloaded. This way, the form is loaded fully
     newDueBy = {
       task_id: taskId,
       due_date: new Date().toISOString().split("T")[0],
@@ -24,7 +26,11 @@
   });
 
   async function handleSubmit() {
-    if (submitEnabled) {
+    if (!submitEnabled) { 
+      acts.add({mode: "warn",message: "Wait until a response is returned.",lifetime: 3});
+      return ;
+    }
+    try {
       submitEnabled = false;
       const res = await fetch(
         "http://localhost:5001/tasks/" + taskId + "/due-by",
@@ -57,7 +63,7 @@
             " already exists for this task, please either select a different one or go back to the task's due by list and activate it.",
           lifetime: 5,
         });
-        console.log(
+        console.error(
           "Due date for " +
             newDueBy.due_date +
             " already exists for this task, please either select a different one or go back to the task's due by list and activate it.",
@@ -67,16 +73,17 @@
           mode: "error",
           message: "Something went wrong, for more info consult the console.",
         });
-        console.log("Status response code: " + statusCode + ";Response: ");
-        console.log(response);
+        console.error("Status response code: " + statusCode + ";Response: ");
+        console.error(response);
       }
-      submitEnabled = true;
-    } else {
+    } catch (error) {
       acts.add({
-        mode: "warn",
-        message: "Wait until a response is returned.",
-        lifetime: 3,
+        mode: "error",
+        message: "Something went wrong, for more info consult the console.",
       });
+      console.error(error);
+    } finally {
+      submitEnabled = true;
     }
   }
 </script>
