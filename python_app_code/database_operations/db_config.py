@@ -3,6 +3,19 @@ from configparser import ConfigParser
 # This script contains the configuration parameters for the database connection
 
 def load_config(filename='database_operations/database.ini', section='postgresql'):
+    """
+    Load the configuration parameters from the specified INI file.
+
+    Args:
+        filename (str): The path to the INI file. Default is 'database_operations/database.ini'.
+        section (str): The section name in the INI file to retrieve the parameters from. Default is 'postgresql'.
+
+    Returns:
+        dict: A dictionary containing the configuration parameters.
+
+    Raises:
+        Exception: If the specified section is not found in the INI file.
+    """
     parser = ConfigParser()
     parser.read(filename)
 
