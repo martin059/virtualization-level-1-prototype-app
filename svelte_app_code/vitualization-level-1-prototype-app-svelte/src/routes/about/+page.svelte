@@ -10,12 +10,39 @@
     </Col>
     <Col class="col-11 d-flex align-items-center flex-column">
         <h1 class="page-title">About { name }</h1>
-        <p>Welcome to the about page of { name }! This application is meant to serve as the Front End for the main App which consist of a ToDo app.</p>
-        <p>The main app is composed of three docker containers: </p>
-        <ul>
-            <li><strong>Postgres Container</strong>: Contains the SQL database which stores all information for the app</li>
-            <li><strong>Python Container</strong>: Will serve as the Back End for the app usign Flask and Python</li>
-            <li><strong>Svelte Container</strong>: Will serve as the Front End for the app using Svelte and TypeScript</li>
-        </ul>
+        <div class="full-height centered-vertical increased-txt-size">
+            <p>Welcome to the <strong>About page of { name }!</strong>.</p>
+            <p>This application is meant to serve as the Front End for the main App which consist of a simple ToDo app.</p>
+            <p>The main app is composed of three <a href="https://www.docker.com/"><img src="/docker-whale.svg" alt="Docker logo" class="about-logo text-logo"></a><strong>Docker</strong> containers:</p>
+            <ul>
+                <li>
+                    <a href="https://www.postgresql.org/"><img src="/Postgresql_elephant.svg" alt="PostgreSQL logo" class="about-logo"></a> 
+                    <strong>Postgres Container</strong>: It contains the SQL database which stores all information for the app.
+                </li>
+                <li>
+                    <a href="https://www.python.org/"><img src="/Python-logo.svg" alt="Python logo" class="about-logo"></a>
+                    <strong>Python Container</strong>: It serves as the Back End for the app usign Python and <a href="https://flask.palletsprojects.com/"><img src="/flask.svg" alt="Flask logo" class="about-logo text-logo"></a> Flask.
+                </li>
+                <li>
+                    <a href="https://svelte.dev/"><img src="/Svelte_Logo.svg" alt="Svelte logo" class="about-logo"></a>
+                    <strong>Svelte Container</strong>: It serves as the Front End for the app using Svelte, <a href="https://www.typescriptlang.org/"><img src="/Typescript.svg" alt="TypeScript logo" class="about-logo text-logo"></a> TypeScript and Sveltestrap.
+                </li>
+            </ul>
+            <p>This whole containerized web app was entirely developed in a Linux Virtual Machine using a <a href="https://manjaro.org/"><img src="/manjaro-logo.svg" alt="Manjaro logo" class="about-logo text-logo"></a> Manjaro distro setup with <a href="https://www.vagrantup.com/"><img src="/vagrant.svg" alt="Vagrant logo" class="about-logo text-logo"></a> Vagrant and configured using an <a href="https://www.ansible.com/"><img src="/ansible.svg" alt="Ansible logo" class="about-logo text-logo"></a> Ansible script.</p>
+        </div>
     </Col>
 </main>
+
+<style>
+    .about-logo {
+        width: 1.75em;
+        height: 1.75em;
+        margin-right: .2em;
+    }
+    .text-logo {
+        margin-left: .2em;
+    }
+    .increased-txt-size {
+        font-size: 1.2em;
+    }
+</style>
