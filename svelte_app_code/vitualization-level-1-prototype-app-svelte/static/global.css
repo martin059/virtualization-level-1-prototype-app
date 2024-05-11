@@ -11,3 +11,7 @@
 .debug-border {
     border: 1px solid red;
 }
+
+.page-title {
+    margin-top: .25em;
+}

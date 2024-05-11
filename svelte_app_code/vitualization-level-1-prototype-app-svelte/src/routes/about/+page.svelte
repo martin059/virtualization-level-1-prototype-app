@@ -9,7 +9,7 @@
         <NavBar />
     </Col>
     <Col class="col-11 d-flex align-items-center flex-column">
-        <h1>About { name }</h1>
+        <h1 class="page-title">About { name }</h1>
         <p>Welcome to the about page of { name }! This application is meant to serve as the Front End for the main App which consist of a ToDo app.</p>
         <p>The main app is composed of three docker containers: </p>
         <ul>

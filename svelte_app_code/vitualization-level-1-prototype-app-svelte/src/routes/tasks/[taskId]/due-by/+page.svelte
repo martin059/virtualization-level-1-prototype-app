@@ -87,7 +87,7 @@
         <NavBar />
     </Col>
     <Col class="col-11 d-flex align-items-center flex-column">
-        <h1>Task {taskId}'s Due dates</h1>
+        <h1 class="page-title">Task {taskId}'s Due dates</h1>
         <Notifications />
         {#if isLoading}
             <LoadingSpinner />

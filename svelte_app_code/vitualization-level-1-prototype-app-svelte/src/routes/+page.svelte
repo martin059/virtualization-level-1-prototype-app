@@ -8,7 +8,7 @@
     <NavBar />
   </Col>
   <Col class="col-11 d-flex align-items-center flex-column">
-    <h1><img src="/ToDo-icon.svg" alt="test" id="logo"> Svelte Front End ToDo App</h1>
+    <h1 class="page-title"><img src="/ToDo-icon.svg" alt="to-do-logo-sample" id="logo"> Svelte Front End ToDo App</h1>
     <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
     <p>Find out more in the <a href="/about">About</a> section!</p>
     

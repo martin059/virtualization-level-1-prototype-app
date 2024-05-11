@@ -93,7 +93,7 @@
     <NavBar />
   </Col>
   <Col class="col-11 d-flex align-items-center flex-column">
-    <h1>New Due Date</h1>
+    <h1 class="page-title">New Due Date</h1>
     <Notifications />
     {#if isLoading}
       <LoadingSpinner />
