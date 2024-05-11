@@ -1,6 +1,7 @@
 # This File contains a series of Integration Tests (ITs) between the Python App and the postgres database.
 # For simplicity, PyUnit wasn't implemented, only manual launching and validation of tests works.
-from database_operations import db_actions as dba, db_task_actions as dbta
+from database_operations import db_task_actions as dbta
+from testing import db_actions as dba
 
 def initial_testing_console():
     print("I'll try to set up a connection with the db container:")

@@ -31,13 +31,14 @@ def get_task_due_dates(id: str) -> jsonify:
    """
    Retrieves the due dates for a task with the given ID.
 
-   Parameters:
-   - id (str): The ID of the task.
+   Args:
+      id (str): The ID of the task.
 
    Returns:
-   - If the task's due dates are found in the database, the function returns the response from the database.
-   - If the task's due dates are not found, the function returns a JSON response with an error message and a 404 status code.
-   - If an exception occurs during the database operation, the function returns a JSON response with the error message and a 500 status code.
+      jsonify: A JSON response containing the result of the operation with the following status codes:
+         200: If the task's due dates are found in the database, the function returns the response from the database.
+         404: If the task's due dates are not found, the function returns an not-found error message.
+         500: If an exception occurs during the database operation, the function returns an error message.
    """
    id = int(id)
    try:
@@ -62,8 +63,10 @@ def post_due_date(task_id: int, received_request: request, comming_from_put: boo
 
    Returns:
       jsonify: A JSON response containing the result of the operation with the following status codes:
+         200: If the due date is successfully updated.
+         201: If the due date is successfully created.
          404: If the task with the given ID is not found, or if the due date doesn't exist for the task and comming from PUT.
-         409: If a due date already exists for the task and if comming from POST.
+         409: If a due date already exists for the task and if comming from POST as there is a creation conflict.
          500: If an unexpected error occurs.
    """
    id = int(task_id)

@@ -180,7 +180,7 @@
     <NavBar />
   </Col>
   <Col class="col-11 d-flex align-items-center flex-column">
-    <h1>Task Details</h1>
+    <h1 class="page-title">Task Details</h1>
     <Notifications />
     {#if isLoading}
       <LoadingSpinner />

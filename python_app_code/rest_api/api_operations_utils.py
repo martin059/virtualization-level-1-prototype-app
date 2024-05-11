@@ -3,7 +3,7 @@ from flask import request, jsonify
 
 class api_operations_utils:
     """
-    Utility class for API operations. Mostly used for validating and parsing of received requests.
+    Utility class for API operations. Used for validating and parsing of received requests.
     """
 
     @staticmethod

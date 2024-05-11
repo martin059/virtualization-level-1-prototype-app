@@ -11,6 +11,7 @@ def get_all_tasks() -> list:
     Returns:
         list: A list of dictionaries representing the rows retrieved from the Tasks table.
               Each dictionary contains the column names as keys and the corresponding values as values.
+              The list is sorted by the ID column in ascending order.
               Returns None if an error occurs during the database operation.
 
     Raises:

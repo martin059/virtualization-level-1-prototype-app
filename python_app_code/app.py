@@ -22,6 +22,8 @@ def main():
 if __name__ == "__main__":
     main()
     
-    # Uncomment the following line to enable launch of Integration Tests between python and postgres containers
+    # By running the following line, it will launch of Integration Tests between the python and postgres containers
+    # do so with the following command: `docker exec vitualization-level-1-prototype-app-python-1 python3 app.py`
+    # Otherwise, this app is meant to be launched and runs automatically with the raising of the docker container
     db_actions_it.initial_testing_console()
     

@@ -61,7 +61,7 @@
     <NavBar />
   </Col>
   <Col class="col-11 d-flex align-items-center flex-column">
-    <h1>New Task</h1>
+    <h1 class="page-title">New Task</h1>
     <Notifications />
       <Col class="col-6">
         <form on:submit|preventDefault={handleSubmit}>

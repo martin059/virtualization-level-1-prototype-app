@@ -2,7 +2,7 @@ from database_operations import db_config as dbc
 from datetime import datetime
 import psycopg2
 
-# This script contains basic database function mostly used for basic debugging purposes
+# This script contains basic database function used for basic debugging purposes
 
 def connect(config = None) -> psycopg2.extensions.connection:
     """

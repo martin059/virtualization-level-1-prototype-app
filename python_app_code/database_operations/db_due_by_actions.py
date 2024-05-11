@@ -16,12 +16,14 @@ def get_due_by(task_id: str) -> list:
     Returns:
         list: A list of dictionaries representing the rows retrieved from the Due_by table.
               Each dictionary contains the column names as keys and the corresponding values.
+              The returned list is sorted by the due_date column placing the earliest date first.
 
     Raises:
         Exception: If there is an error while executing the SQL query or connecting to the database.
 
     """
-    select_query_base = 'SELECT * FROM app."Due_by" WHERE task_id = {0}'
+    
+    select_query_base = 'SELECT * FROM app."Due_by" WHERE task_id = {0} ORDER BY due_date'
     select_query = sql.SQL(select_query_base).format(sql.Literal(task_id))
     config  = dbc.load_config()
     try:
@@ -109,6 +111,7 @@ def insert_into_due_by_table(task_id: int, due_date: str) -> str:
     3. If the new due date is the same as the active one, end the process.
     4. Check if the new due date is already present in the table with 'is_active' set to False.
        If it is, update that row to set 'is_active' to True.
+       If it is present with 'is_active' set to True, the due date is deactivated.
     5. If the new due date is not present, add a new row with the new due date and set 'is_active' to True.
 
     Raises:
@@ -174,7 +177,7 @@ def prep_insert_due_date_queries(task_id: int, due_date: str) -> Tuple[str, str,
 def check_current_due_date(cur: psycopg2.extensions.cursor, due_date_rows: list, due_date: str,
                             update_deactivate_query: str) -> tuple:
     """
-    Check the current due date and perform necessary modifications.
+    Check the current due date and perform necessary modifications as described in the logic of insert_into_due_by_table().
 
     Args:
         cur (psycopg2.extensions.cursor): The database cursor object.

@@ -17,7 +17,7 @@ def list_tasks_route(task_id: int = None) -> jsonify:
       task_id (int, optional): The ID of the task. Defaults to None.
 
    Returns:
-      JSON response: The response containing the result of the operation or an error message.
+      JSON response: The response containing the result of the operation or an error message is a received parameter is invalid (400 code).
    """
    if task_id is not None:
       if not utils.is_task_id_valid(task_id):
@@ -46,7 +46,9 @@ def list_tasks() -> jsonify:
    Retrieves a list of all tasks from the database.
 
    Returns:
-      jsonify: A list of tasks.
+      jsonify: A JSON response containing the result of the operation with the following status codes:
+         200: If the tasks are found in the database, the function returns the response from the database.
+         500: If an exception occurs during the database operation, the function returns an error message.
    """
    try:
       return jsonify(dba.get_all_tasks()), 200
@@ -61,9 +63,10 @@ def get_task(id: str) -> jsonify:
        id (str): The ID of the task to retrieve.
 
    Returns:
-       If the task is found, the task details are returned.
-       If the task is not found, a JSON response with an error message and status code 404 is returned.
-       If an exception occurs during the retrieval process, a JSON response with the error message and status code 500 is returned.
+       jsonify: A JSON response containing the result of the operation with the following status codes:
+         200: If the task is found in the database, the function returns the response from the database.
+         404: If the task is not found, the function returns a not-found error message.
+         500: If an exception occurs during the database operation, the function returns an error message.
    """
    try:
       db_response = dba.get_a_task(id)
@@ -83,7 +86,10 @@ def add_task(received_request: request) -> jsonify:
       received_request (request): The request object containing the task details.
 
    Returns:
-      A JSON response containing the new task ID if successful, or an error message if unsuccessful.
+      jsonify: A JSON response containing the result of the operation with the following status codes:
+         201: If the task is successfully added to the database, the function returns the ID of the new task.
+         400: If the task has an invalid format, the function returns an error message.
+         500: If an exception occurs during the database operation, the function returns an error message.
    """
    tmp = utils.validate_json(received_request)
    if tmp[1] == 200:
@@ -110,7 +116,11 @@ def update_task(task_id: int, received_request: request) -> jsonify:
       received_request (request): The request object containing the updated task information.
 
    Returns:
-      jsonify: A JSON response containing the updated task information or an error message.
+      jsonify: A JSON response containing the result of the operation with the following status codes:
+         204: If the task is successfully updated, the function returns an empty response.
+         400: If the task has an invalid format, the function returns an error message.
+         404: If the task is not found, the function returns a not-found error message.
+         500: If an exception occurs during the database operation, the function returns an error message.
 
    """
    id = int(task_id)
@@ -144,7 +154,10 @@ def delete_task(task_id: int) -> jsonify:
       task_id (int): The ID of the task to be deleted.
 
    Returns:
-      jsonify: A JSON response indicating the success or failure of the deletion.
+      jsonify: A JSON response containing the result of the operation with the following status codes:
+         204: If the task is successfully updated, the function returns an empty response.
+         404: If the task is not found, the function returns a not-found error message.
+         500: If an exception occurs during the database operation, the function returns an error message.
    """
    try:
      task = dba.get_a_task(task_id)
