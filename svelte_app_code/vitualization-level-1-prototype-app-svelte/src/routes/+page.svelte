@@ -1,6 +1,14 @@
 <script lang="ts">
 // @ts-nocheck
-  import {Col, Row, NavBar, Button} from "@components/commonComponents";
+  import {Col, NavBar, Button} from "@components/commonComponents";
+  import { goto } from '$app/navigation';
+
+  function goToTasks() {
+    goto('/tasks');
+  }
+  function goToAbout() {
+    goto('/about');
+  }
 </script>
 
 <main class="d-flex flex-row full-height">
@@ -9,19 +17,15 @@
   </Col>
   <Col class="col-11 d-flex align-items-center flex-column">
     <h1 class="page-title"><img src="/ToDo-icon.svg" alt="to-do-logo-sample" id="logo"> Svelte Front End ToDo App</h1>
-    <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
-    <p>Find out more in the <a href="/about">About</a> section!</p>
-    
-
-    <h2>View tasks</h2>
-    <p><a href="/tasks">Go to tasks view</a></p>
-
-    <h2>Sveltestrap Test</h2>
-    <Row>
-      <Col>
-        <Button color="primary" outline>Hello Sveltestrap!</Button>
-      </Col>
-    </Row>
+    <div class="full-height centered-vertically increased-txt-size">
+      <div class="central-div">
+        <h2>Welcome to the Svelte Front End ToDo App!</h2>
+        <div style="margin-bottom: 30px;"></div>
+        <Button on:click={goToTasks} color="primary" block >Go to View Task</Button>
+        <div style="margin-bottom: 15px;"></div>
+        <Button on:click={goToAbout} color="secondary" block class='main-button'>Learn more about this App!</Button>
+      </div>
+    </div>
   </Col>
 </main>
 
@@ -29,5 +33,8 @@
   #logo {
     width: 1.75em;
     height: 1.75em;
+  }
+  .central-div {
+    margin-top: 40%;
   }
 </style>
