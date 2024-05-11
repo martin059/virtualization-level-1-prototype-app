@@ -21,7 +21,7 @@ def get_due_by(task_id: str) -> list:
         Exception: If there is an error while executing the SQL query or connecting to the database.
 
     """
-    select_query_base = 'SELECT * FROM app."Due_by" WHERE task_id = {0}'
+    select_query_base = 'SELECT * FROM app."Due_by" WHERE task_id = {0} ORDER BY due_date'
     select_query = sql.SQL(select_query_base).format(sql.Literal(task_id))
     config  = dbc.load_config()
     try:
