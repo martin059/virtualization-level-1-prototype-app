@@ -9,11 +9,7 @@
 		"skipLibCheck": true,
 		"sourceMap": true,
 		"strict": true,
-		"moduleResolution": "bundler",
-		"paths": {
-		  "@models/*": ["./src/models/*"],
-		  "@components/*": ["./src/components/*"]
-		}
+		"moduleResolution": "bundler"
 	},
 	"kit": {
 		"alias": {
