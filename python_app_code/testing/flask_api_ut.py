@@ -17,7 +17,7 @@ in_memory_datastore = {
 
 @basic_flask_api.get('/')
 def hello_rest():
-   return "Hello World from REST!"
+   return "Hello World! This is the Back-End Python API up and running!"
 
 @basic_flask_api.route('/programming_languages', methods=['GET', 'POST'])
 def list_programming_languages_route():

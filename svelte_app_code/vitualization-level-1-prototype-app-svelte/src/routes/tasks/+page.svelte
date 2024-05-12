@@ -75,6 +75,10 @@
         }
     }
 
+    function goBack() {
+        goto('/');
+    }
+
 </script>
 
 <main class="d-flex flex-row full-height">
@@ -82,7 +86,10 @@
         <NavBar />
     </Col>
     <Col class="col-11 d-flex align-items-center flex-column">
-        <h1 class="page-title">Task List</h1>
+        <div class="title-return">
+          <a href="/" on:click|preventDefault={goBack}><img src="/left-arrow.svg" alt="Go back" class="go-back-arrow"/></a>
+          <h1 class="page-title">Task List</h1>
+        </div>
         <Notifications />
         {#if isLoading}
             <LoadingSpinner />

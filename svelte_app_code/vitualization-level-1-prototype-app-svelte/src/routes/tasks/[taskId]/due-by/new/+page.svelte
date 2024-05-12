@@ -12,6 +12,7 @@
   let submitEnabled: boolean = false;
   let isLoading: boolean = true;
   let taskId: string | null = $page.params.taskId;
+  let goingBack: boolean = false;
 
   onMount(() => {
     // The following makes it so the initialization can be done in a consistent way in comparison with other views
@@ -26,6 +27,7 @@
   });
 
   async function handleSubmit() {
+    if (goingBack) return; // if returning don't handle form
     if (!submitEnabled) { 
       acts.add({mode: "warn",message: "Wait until a response is returned.",lifetime: 3});
       return ;
@@ -86,6 +88,11 @@
       submitEnabled = true;
     }
   }
+
+  function goBack() {
+    goingBack = true;
+    goto("/tasks/" + taskId + "/due-by");
+  }
 </script>
 
 <main class="d-flex flex-row full-height">
@@ -93,7 +100,10 @@
     <NavBar />
   </Col>
   <Col class="col-11 d-flex align-items-center flex-column">
-    <h1 class="page-title">New Due Date</h1>
+    <div class="title-return">
+      <a href="/tasks" on:click|preventDefault={goBack}><img src="/left-arrow.svg" alt="Go back" class="go-back-arrow"/></a>
+      <h1 class="page-title">New Due Date</h1>
+    </div>
     <Notifications />
     {#if isLoading}
       <LoadingSpinner />
@@ -119,10 +129,10 @@
               bind:value={newDueBy.due_date}
             />
           </div>
-          <div>
-            <Button type="submit" color="primary" block
-              >Submit New Due date</Button
-            >
+          <div class="horizontal-buttons">
+            <Button on:click={goBack} block color="secondary">Go back</Button>
+            <div style="margin-left: 2em;"></div>
+            <Button type="submit" color="primary" block>Submit New Due Date</Button>
           </div>
         </form>
       </Col>
