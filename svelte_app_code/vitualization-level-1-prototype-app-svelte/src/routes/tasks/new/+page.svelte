@@ -10,12 +10,14 @@
   let newTask: Task = { task_name: '', task_descrip: '', task_status: 'Created', due_date: null };
 
   let submitEnabled: boolean;
+  let goingBack: boolean = false;
 
   onMount(() => {
     submitEnabled = true;
   });
 
   async function handleSubmit() {
+    if (goingBack) return; // if returning don't handle form
     if(isTaskNameValid()) {
       if (submitEnabled){
         submitEnabled = false;
@@ -54,6 +56,11 @@
     }
   }
 
+  function goBack() {
+    goingBack = true;
+    goto('/tasks');
+  }
+
 </script>
 
 <main class="d-flex flex-row full-height">
@@ -61,7 +68,10 @@
     <NavBar />
   </Col>
   <Col class="col-11 d-flex align-items-center flex-column">
-    <h1 class="page-title">New Task</h1>
+    <div class="title-return">
+      <a href="/tasks" on:click|preventDefault={goBack}><img src="/left-arrow.svg" alt="Go back" class="go-back-arrow"/></a>
+      <h1 class="page-title">New Task</h1>
+    </div>
     <Notifications />
       <Col class="col-6">
         <form on:submit|preventDefault={handleSubmit}>
@@ -88,7 +98,9 @@
             <input type="date" class="form-control" id="due_date" bind:value={newTask.due_date}/>
            </div>
           <div>
-          <div>
+          <div class="horizontal-buttons">
+            <Button on:click={goBack} block color="secondary">Go back</Button>
+            <div style="margin-left: 2em;"></div>
             <Button type="submit" color="primary" block>Submit New Task</Button>
           </div>
         </form>

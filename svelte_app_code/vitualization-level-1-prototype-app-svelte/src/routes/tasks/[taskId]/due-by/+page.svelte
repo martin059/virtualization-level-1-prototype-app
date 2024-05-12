@@ -21,6 +21,9 @@
             response = await res.json();
             if (statusCode >= 200 && statusCode < 300) {
                 dueDates = response as DueDate[];
+            } else if (statusCode === 404) {
+                // If the task has no due dates, the user is redirected to the task's details page
+                goto('/tasks/'+ taskId);
             } else {
                 acts.add({ mode: 'error', message: 'Something went wrong, for more info consult the console.', lifetime: 3});
                 console.error('Status response code: ' + statusCode + ';Response: ');
@@ -80,6 +83,10 @@
         goto('/tasks/' + taskId + '/due-by/new');
     }
 
+    function goBack() {
+        goto('/tasks/' + taskId);
+    }
+
 </script>
 
 <main class="d-flex flex-row full-height">
@@ -87,7 +94,10 @@
         <NavBar />
     </Col>
     <Col class="col-11 d-flex align-items-center flex-column">
-        <h1 class="page-title">Task {taskId}'s Due dates</h1>
+        <div class="title-return">
+          <a href="/tasks" on:click|preventDefault={goBack}><img src="/left-arrow.svg" alt="Go back" class="go-back-arrow"/></a>
+          <h1 class="page-title">Task {taskId}'s Due dates</h1>
+        </div>
         <Notifications />
         {#if isLoading}
             <LoadingSpinner />

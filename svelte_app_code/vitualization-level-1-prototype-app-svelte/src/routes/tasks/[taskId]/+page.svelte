@@ -93,6 +93,10 @@
     goto("/tasks/" + taskId + "/due-by/new");
   }
 
+  function goBack() {
+    goto("/tasks");
+  }
+
   function toggleUpdateTask() {
     updateDisabled = !updateDisabled;
   }
@@ -180,7 +184,10 @@
     <NavBar />
   </Col>
   <Col class="col-11 d-flex align-items-center flex-column">
-    <h1 class="page-title">Task Details</h1>
+    <div class="title-return">
+      <a href="/tasks" on:click|preventDefault={goBack}><img src="/left-arrow.svg" alt="Go back" class="go-back-arrow"/></a>
+      <h1 class="page-title">Task {taskId}'s Details</h1>
+    </div>
     <Notifications />
     {#if isLoading}
       <LoadingSpinner />

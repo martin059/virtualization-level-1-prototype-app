@@ -2,6 +2,11 @@
     // @ts-ignore
     import {Col, NavBar} from "@components/commonComponents";
     export let name: string = 'Svelte Front End App';
+    import { goto } from "$app/navigation";
+
+    function goBack() {
+        goto('/');
+    }
 </script>
 
 <main class="d-flex flex-row full-height">
@@ -9,7 +14,10 @@
         <NavBar />
     </Col>
     <Col class="col-11 d-flex align-items-center flex-column">
-        <h1 class="page-title">About { name }</h1>
+        <div class="title-return">
+          <a href="/tasks" on:click|preventDefault={goBack}><img src="/left-arrow.svg" alt="Go back" class="go-back-arrow"/></a>
+          <h1 class="page-title">About { name }</h1>
+        </div>
         <div class="full-height centered-vertical increased-txt-size">
             <p>Welcome to the <strong>About page of { name }!</strong>.</p>
             <p>This application is meant to serve as the Front End for the main App which consist of a simple ToDo app.</p>
