@@ -19,6 +19,41 @@
     border: 1px solid red;
 }
 
+.debug-border2 {
+    border: 1px solid blue;
+}
+
+.horizontal-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.title-return {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding-bottom: 1.5em;
+}
+
+.go-back-arrow {
+    width: 3em;
+    height: 3em;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease;
+}
+
+.go-back-arrow:hover {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
+}
+
+.go-back-arrow:active {
+    box-shadow: 0 0 12px rgba(0, 0, 0, 1);
+    border-radius: 50%;
+}
+
 .page-title {
     margin-top: .25em;
+    margin-left: auto;
+    margin-right: auto;
 }
