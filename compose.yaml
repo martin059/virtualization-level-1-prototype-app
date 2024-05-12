@@ -42,5 +42,5 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: svelte_app_code/vitualization-level-1-prototype-app-svelte
+      device: svelte_app_code/virtualization-level-1-prototype-app-svelte
       o: bind

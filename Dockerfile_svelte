@@ -3,10 +3,10 @@ FROM node:lts-alpine AS build
 
 WORKDIR /app
 
-# The svelte project must be initialized in the working directory otherwise the build will fail
-# read main README.md for more information
-COPY ./svelte_app_code/vitualization-level-1-prototype-app-svelte/package*.json ./
-COPY ./svelte_app_code/vitualization-level-1-prototype-app-svelte .
+# The svelte project must be initialized in the working directory otherwise the build will fail saying 'sh: vite: not found'
+# Read main README.md for more information
+COPY ./svelte_app_code/virtualization-level-1-prototype-app-svelte/package*.json ./
+COPY ./svelte_app_code/virtualization-level-1-prototype-app-svelte .
 RUN npm install --omit=dev
 
 EXPOSE 8080
