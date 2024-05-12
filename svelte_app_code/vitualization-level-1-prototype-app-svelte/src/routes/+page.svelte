@@ -1,6 +1,6 @@
 <script lang="ts">
-// @ts-nocheck
-  import {Col, NavBar, Button} from "@components/commonComponents";
+  // @ts-nocheck
+  import { Col, NavBar, Button } from '@components/commonComponents';
   import { goto } from '$app/navigation';
 
   function goToTasks() {

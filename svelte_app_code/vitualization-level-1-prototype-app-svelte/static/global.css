@@ -57,3 +57,7 @@
     margin-left: auto;
     margin-right: auto;
 }
+
+:root {
+    --tadashi_svelte_notifications_width: 500px;
+}

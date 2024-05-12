@@ -1,13 +1,18 @@
 <script lang="ts">
-// @ts-nocheck
-  import { Col, NavBar, Button } from "@components/commonComponents";
-  import { Notifications, acts } from '@tadashi/svelte-notification'
-  import type { Task } from "@models/Task";
-  import { onMount } from "svelte";
-  import { goto } from "$app/navigation";
+  // @ts-nocheck
+  import { Col, NavBar, Button } from '@components/commonComponents';
+  import { Notifications, acts } from '@tadashi/svelte-notification';
+  import type { Task } from '@models/Task';
+  import { onMount } from 'svelte';
+  import { goto } from '$app/navigation';
 
   // By default, the new task is created with the status 'Created'
-  let newTask: Task = { task_name: '', task_descrip: '', task_status: 'Created', due_date: null };
+  let newTask: Task = {
+    task_name: '',
+    task_descrip: '',
+    task_status: 'Created',
+    due_date: null,
+  };
 
   let submitEnabled: boolean;
   let goingBack: boolean = false;
@@ -18,13 +23,14 @@
 
   async function handleSubmit() {
     if (goingBack) return; // if returning don't handle form
-    if(isTaskNameValid()) {
-      if (submitEnabled){
+    if (isTaskNameValid()) {
+      if (submitEnabled) {
         submitEnabled = false;
-        const res = await fetch('http://localhost:5001/tasks', {
+        const res = await fetch('http://localhost:5001/tasks', 
+        {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify(newTask),
           timeout: 10000 // 10 seconds
@@ -32,24 +38,24 @@
         const response = await res.json();
         const statusCode = res.status;
         if (statusCode >= 200 && statusCode < 300) {
-          acts.add({ mode: 'success', message: 'Task created successfully. Redirecting to task page...', lifetime: 2});
-          await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds so user can read message
+          acts.add({mode: 'success', message: 'Task created successfully. Redirecting to task page...', lifetime: 2});
+          await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait 2 seconds so user can read message
           goto('/tasks');
         } else {
-          acts.add({ mode: 'error', message: 'Something went wrong, for more info consult the console.' });
+          acts.add({mode: 'error', message: 'Something went wrong, for more info consult the console.',});
           console.log('Status response code: ' + statusCode + ';Response: ');
           console.log(response);
         }
         submitEnabled = true;
       } else {
-        acts.add({ mode: 'warn', message: 'Wait until a response is returned.', lifetime: 3 });
+        acts.add({mode: 'warn', message: 'Wait until a response is returned.', lifetime: 3});
       }
     }
   }
 
   function isTaskNameValid(): boolean {
     if (newTask.task_name.trim() === '') {
-      acts.add({ mode: 'error', message: 'Task name must not be empty.', lifetime: 3 });
+      acts.add({mode: 'error', message: 'Task name must not be empty.', lifetime: 3});
       return false;
     } else {
       return true;
@@ -60,7 +66,6 @@
     goingBack = true;
     goto('/tasks');
   }
-
 </script>
 
 <main class="d-flex flex-row full-height">
@@ -96,20 +101,18 @@
           <div class="mb-3">
             <label for="due_date" class="form-label">Optional due date (leave as is if it doesn't have one)</label>
             <input type="date" class="form-control" id="due_date" bind:value={newTask.due_date}/>
-           </div>
+          </div>
           <div>
           <div class="horizontal-buttons">
             <Button on:click={goBack} block color="secondary">Go back</Button>
             <div style="margin-left: 2em;"></div>
             <Button type="submit" color="primary" block>Submit New Task</Button>
           </div>
-        </form>
-      </Col>
+        </div>
+      </form>
+    </Col>
   </Col>
 </main>
 
 <style>
-  :root {
-    --tadashi_svelte_notifications_width: 500px;
-  }
 </style>

@@ -1,8 +1,8 @@
 <script lang="ts">
     // @ts-ignore
-    import {Col, NavBar} from "@components/commonComponents";
+    import { Col, NavBar } from '@components/commonComponents';
     export let name: string = 'Svelte Front End App';
-    import { goto } from "$app/navigation";
+    import { goto } from '$app/navigation';
 
     function goBack() {
         goto('/');
@@ -15,8 +15,8 @@
     </Col>
     <Col class="col-11 d-flex align-items-center flex-column">
         <div class="title-return">
-          <a href="/tasks" on:click|preventDefault={goBack}><img src="/left-arrow.svg" alt="Go back" class="go-back-arrow"/></a>
-          <h1 class="page-title">About { name }</h1>
+            <a href="/tasks" on:click|preventDefault={goBack}><img src="/left-arrow.svg" alt="Go back" class="go-back-arrow"/></a>
+            <h1 class="page-title">About { name }</h1>
         </div>
         <div class="full-height centered-vertical increased-txt-size">
             <p>Welcome to the <strong>About page of { name }!</strong>.</p>
