@@ -1,10 +1,10 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { Col, NavBar, Button } from "@components/commonComponents";
+    import { Col, NavBar, Button } from '@components/commonComponents';
     import { Table } from '@sveltestrap/sveltestrap';
     import LoadingSpinner from '@components/loadingSpinner.svelte';
-    import { Notifications, acts } from '@tadashi/svelte-notification'
-    import type { Task } from "@models/Task";
+    import { Notifications, acts } from '@tadashi/svelte-notification';
+    import type { Task } from '@models/Task';
     import { goto } from '$app/navigation';
 
     let response: any;
@@ -20,12 +20,14 @@
             if (statusCode >= 200 && statusCode < 300) {
                 tasks = response as Task[];
             } else {
-                acts.add({ mode: 'error', message: 'Something went wrong, for more info consult the console.', lifetime: 3});
+                acts.add({mode: 'error', message: 'Something went wrong, for more info consult the console.',
+                    lifetime: 3
+                });
                 console.error('Status response code: ' + statusCode + ';Response: ');
                 console.error(response);
             }
         } catch (error) {
-            acts.add({ mode: 'error', message: 'Something went wrong, for more info consult the console.' });
+            acts.add({mode: 'error', message: 'Something went wrong, for more info consult the console.'});
             console.error(error);
         } finally {
             isLoading = false;
@@ -40,45 +42,42 @@
 
     async function updateTaskStatus(taskId: number, newStatus: string) {
         if (updateInProgress) {
-          acts.add({mode: "warn",message: "Update in progress. Wait until a response is returned.", lifetime: 3});
-          return;
+            acts.add({mode: 'warn', message: 'Update in progress. Wait until a response is returned.', lifetime: 3});
+            return;
         }
         updateInProgress = true;
         try {
-          let jsonString: string = `{"task_status":"${newStatus}"}`;
-          const res = await fetch("http://localhost:5001/tasks/" + taskId, {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: jsonString,
-            timeout: 10000, // 10 seconds
-          });
-          const statusCode = await res.status;
-          if (statusCode >= 200 && statusCode < 300) {
-            acts.add({ mode: "success", message: "Task " + taskId + " updated", lifetime: 3 });
-            fetchData();
-          } else {
-            const response = await res.json();
-            acts.add({
-              mode: "error",
-              message: "Something went wrong, for more info consult the console.",
+            let jsonString: string = `{"task_status":"${newStatus}"}`;
+            const res = await fetch('http://localhost:5001/tasks/' + taskId, 
+            {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: jsonString,
+                timeout: 10000, // 10 seconds
             });
-            console.error("Status response code: " + statusCode + ";Response: ");
-            console.error(response);
-          }
+            const statusCode = await res.status;
+            if (statusCode >= 200 && statusCode < 300) {
+                acts.add({ mode: 'success', message: 'Task ' + taskId + ' updated', lifetime: 3});
+                fetchData();
+            } else {
+                const response = await res.json();
+                acts.add({mode: 'error', message: 'Something went wrong, for more info consult the console.'});
+                console.error('Status response code: ' + statusCode + ';Response: ');
+                console.error(response);
+            }
         } catch (error) {
-          acts.add({mode: "error",message: "Something went wrong, for more info consult the console.",});
-          console.error(error);
+            acts.add({mode: 'error', message: 'Something went wrong, for more info consult the console.'});
+            console.error(error);
         } finally {
-          updateInProgress = false;
+            updateInProgress = false;
         }
     }
 
     function goBack() {
         goto('/');
     }
-
 </script>
 
 <main class="d-flex flex-row full-height">
@@ -114,7 +113,11 @@
                                     <th scope="row">{task.id}</th>
                                     <td>{task.task_name}</td>
                                     <td>{task.task_descrip}</td>
-                                    <td>{new Date(task.creation_date).toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: '2-digit' })}</td>
+                                    <td>
+                                        {new Date(task.creation_date).toLocaleDateString(
+                                            'en-GB', { year: 'numeric', month: 'long', day: '2-digit' })
+                                        }
+                                    </td>
                                     <td>{task.task_status}</td>
                                     <td><Button color="info" on:click={() => goto(`/tasks/${task.id}`)}>View</Button></td>
                                     {#if task.task_status === 'Done' || task.task_status === 'Dropped'}
@@ -141,6 +144,11 @@
 </main>
 
 <style>
-    .filling-div { width: 100%;height: 100%;}
-    .table-div { width: 90%; }
+    .filling-div {
+        width: 100%;
+        height: 100%;
+    }
+    .table-div {
+        width: 90%;
+    }
 </style>

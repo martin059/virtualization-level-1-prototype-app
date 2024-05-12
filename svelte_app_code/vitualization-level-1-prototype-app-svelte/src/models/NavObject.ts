@@ -7,7 +7,7 @@ export class NavObject {
      * @param title - The title of the navigation object.
      * @param href - The href of the navigation object.
      */
-    constructor(public title: string, public href: string) {}
+    constructor(public title: string, public href: string) { }
 
     /**
      * Gets the lowercase value of the title.

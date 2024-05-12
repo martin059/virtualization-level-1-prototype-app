@@ -11,12 +11,12 @@
     let navItems: NavObject[] = [
         new NavObject('Home', '/'),
         new NavObject('Tasks', '/tasks'),
-        new NavObject('About', '/about')
+        new NavObject('About', '/about'),
     ];
 
     onMount(() => {
         navItems.forEach((item) => {
-            if ((routeId === '/' || routeId === '') && item.href === '/'){
+            if ((routeId === '/' || routeId === '') && item.href === '/') {
                 activeTab = item.label;
             } else if (routeId.includes(item.href)) {
                 activeTab = item.label;
@@ -39,7 +39,12 @@
         <Nav vertical pills>
             {#each navItems as item}
                 <NavItem>
-                    <NavLink active={activeTab === item.label} href={item.href} on:click={() => handleTabClick(item.label)} title={item.title}>
+                    <NavLink
+                        active={activeTab === item.label}
+                        href={item.href}
+                        on:click={() => handleTabClick(item.label)}
+                        title={item.title}
+                    >
                         {item.title}
                     </NavLink>
                 </NavItem>
