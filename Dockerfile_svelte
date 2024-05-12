@@ -5,8 +5,8 @@ WORKDIR /app
 
 # The svelte project must be initialized in the working directory otherwise the build will fail
 # read main README.md for more information
-COPY ./svelte_app_code/vitualization-level-1-prototype-app-svelte/package*.json ./
-COPY ./svelte_app_code/vitualization-level-1-prototype-app-svelte .
+COPY ./svelte_app_code/virtualization-level-1-prototype-app-svelte/package*.json ./
+COPY ./svelte_app_code/virtualization-level-1-prototype-app-svelte .
 RUN npm install --omit=dev
 
 EXPOSE 8080
