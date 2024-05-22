@@ -29,7 +29,7 @@
                 </li>
                 <li>
                     <a href="https://www.python.org/"><img src="/Python-logo.svg" alt="Python logo" class="about-logo"></a>
-                    <strong>Python Container</strong>: It serves as the Back End for the app usign Python and <a href="https://flask.palletsprojects.com/"><img src="/flask.svg" alt="Flask logo" class="about-logo text-logo"></a> Flask.
+                    <strong>Python Container</strong>: It serves as the Back End for the app using Python and <a href="https://flask.palletsprojects.com/"><img src="/flask.svg" alt="Flask logo" class="about-logo text-logo"></a> Flask.
                 </li>
                 <li>
                     <a href="https://svelte.dev/"><img src="/Svelte_Logo.svg" alt="Svelte logo" class="about-logo"></a>
