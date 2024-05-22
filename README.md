@@ -9,8 +9,8 @@ This projects deploys and runs a simple dockerized web app that illustrates the 
 The app itself is a simple web app that tracks To-Do tasks. It is a containerized web app running on three containers:
 
 - Postgres Container: It contains the SQL database which stores all information for the app.
-- Python Container: It serves as the Back End for the app using Python and Flask.
-- Svelte Container: It serves as the Front End for the app using Svelte, TypeScript and Sveltestrap.
+- Python Container: It serves as the Back End (BE) for the app using Python and Flask to expose a REST API.
+- Svelte Container: It serves as the Front End (FE) for the app using Svelte, TypeScript and Sveltestrap.
 
 All three containers are running the latest official stable release on Alpine Linux. Unless specifically stated otherwise, all versions used are the _current stable release_ at the time of compilation.
 
@@ -20,6 +20,26 @@ To run the automatic tests, read the [Testing](#testing) section.
 
 ### General principle
 
+As previously stated, this is a simple app that keeps track of the To-Do tasks that are stored in a SQL database whose design is represented in [this entity-relationship diagram](database/simple-app-erd.png).
+
+A Task has the following elements:
+
+- `Id`: The Task's numerical ID, automatically assigned by the database upon creation. It is a positive number starting at 1 and increasing sequentially.
+- `Task Name`: The Task's name given by the user. All Tasks must have a name.
+- `Task Description`: The Task's description given by the user.
+- `Creation Date`: The Task's creation date which is automatically assigned by the database upon creation.
+- `Task Status`: The Task's current status which can only be one of the following:
+  - `Created`: The default state of a Task. It indicates that a Task has been created and is pending.
+  - `Done`: It indicates that a Task has been completed.
+  - `Dropped`: It indicates that a Task has been dropped without been completed.
+  - `Deleted`: It indicates that a Task has been deleted.
+  - `Postponed`: It indicates that a Task has been postponed.
+
+A task can optionally have one or more due dates associated with it, but a Task can have, at most, one due date active at any given time.
+
+This app does not allow a user to literally delete a Task from the database, unless the user sends the SQL query directly to the database. Instead the user can only mark it as "Deleted".
+
+The communication between the FE app and the BE app is done through REST requests. The communication between the BE app and the database is done through the `psycopg2` library. All communication between the database and the FE app must go through the BE app.
 
 
 ### To run the app
