@@ -35,7 +35,7 @@
 </script>
 
 <div>
-    <Navbar color="light" light expand="md" class="full-height">
+    <Navbar color="secondary-subtle" light expand="md" class="full-height">
         <Nav vertical pills>
             {#each navItems as item}
                 <NavItem>
