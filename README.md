@@ -64,6 +64,6 @@ The communication between the FE app and the BE app is done through REST request
 
 No automatic tool has been used for this part to avoid adding complexity to it. It requires manual launching of the tests and manual validation of results. However, the functionality tested is simple, so if no error messages are thrown it can be assumed that it is working as expected.
 
-1. If it is commented, uncomment [this line](python_app_code/app.py#L17).
+1. If it is commented, uncomment [this line](python_app_code/app.py#L28).
 2. Make sure that the script `deploy_db_design.sh` has been executed previously, otherwise it will fail since the DB isn't configured.
 3. Execute `docker exec virtualization-level-1-prototype-app-python-1 python3 app.py` and debug manually.
