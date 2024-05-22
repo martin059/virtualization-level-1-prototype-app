@@ -6,7 +6,21 @@ This projects deploys and runs a simple dockerized web app that illustrates the 
 
 ## Sample App
 
-The app itself is a simple web app that is made to run on set of docker containers.
+The app itself is a simple web app that tracks To-Do tasks. It is a containerized web app running on three containers:
+
+- Postgres Container: It contains the SQL database which stores all information for the app.
+- Python Container: It serves as the Back End for the app using Python and Flask.
+- Svelte Container: It serves as the Front End for the app using Svelte, TypeScript and Sveltestrap.
+
+All three containers are running the latest official stable release on Alpine Linux. Unless specifically stated otherwise, all versions used are the _current stable release_ at the time of compilation.
+
+To compile and run the app, read the [To run the app](#to-run-the-app) section.
+
+To run the automatic tests, read the [Testing](#testing) section.
+
+### General principle
+
+
 
 ### To run the app
 
@@ -15,14 +29,15 @@ The app itself is a simple web app that is made to run on set of docker containe
 3. Get initial build for the front-end service that the service will later require while building the image (`npm install`)
 4. Go back to the main directory (`cd ../..` or `cd <path_to_cloned_repo>/virtualization-level-1-prototype-app`)
 5. Raise the docker containers (`docker-compose up -d`)
-6. Execute deploy bash script to set up database structure (`bash <path_to_cloned_repo>/database/deploy_db_design.sh`)
+6. Execute deploy bash script to set up database structure (`bash database/deploy_db_design.sh` or `bash <path_to_cloned_repo>/database/deploy_db_design.sh`)
+7. Open the browser and go to http://127.0.0.1:5002 to access the Front-end app.
 
 ## Testing
 
 ### To test the Python API directly with postman collection
 
 1. Import [postman collection](https://github.com/martin059/virtualization-level-1-prototype-app/blob/master/postman_testing_requests/testing-postman-collection.json)
-2. Set the `baseUrl` collection's variable to `http://127.0.0.1:5001`
+2. Set the `baseUrl` collection's variable to `http://127.0.0.1:5001` (the collection has these values pre-configured).
 3. Run the collection's test **sequentially** from top to bottom (otherwise, some tests will fail as a required entry wasn't previously inserted)
 
 ### To test the Python and Database integration
