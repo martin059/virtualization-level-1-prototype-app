@@ -56,7 +56,7 @@ The communication between the FE app and the BE app is done through REST request
 
 ### To test the Python API directly with postman collection
 
-1. Import [postman collection](https://github.com/martin059/virtualization-level-1-prototype-app/blob/master/postman_testing_requests/testing-postman-collection.json)
+1. Import [postman collection](postman_testing_requests/testing-postman-collection.json)
 2. Set the `baseUrl` collection's variable to `http://127.0.0.1:5001` (the collection has these values pre-configured).
 3. Run the collection's test **sequentially** from top to bottom (otherwise, some tests will fail as a required entry wasn't previously inserted)
 
@@ -64,6 +64,6 @@ The communication between the FE app and the BE app is done through REST request
 
 No automatic tool has been used for this part to avoid adding complexity to it. It requires manual launching of the tests and manual validation of results. However, the functionality tested is simple, so if no error messages are thrown it can be assumed that it is working as expected.
 
-1. If it is commented, uncomment [this line](https://github.com/martin059/virtualization-level-1-prototype-app/blob/master/python_app_code/app.py#L17).
+1. If it is commented, uncomment [this line](python_app_code/app.py#L17).
 2. Make sure that the script `deploy_db_design.sh` has been executed previously, otherwise it will fail since the DB isn't configured.
 3. Execute `docker exec virtualization-level-1-prototype-app-python-1 python3 app.py` and debug manually.
